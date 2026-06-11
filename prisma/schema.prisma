@@ -115,12 +115,6 @@ model PhaseLock {
   updatedAt DateTime @updatedAt
 }
 
-model RateLimit {
-  key       String   @id
-  count     Int      @default(0)
-  expiresAt DateTime
-}
-
 model ActualQualifiedTeam {
   id     String         @id @default(cuid())
   teamId String

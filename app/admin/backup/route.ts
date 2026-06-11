@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getPhaseLocks } from "@/lib/locks";
-import { checkRateLimit, getClientIp, RateLimitError } from "@/lib/rateLimit";
 import { isAdmin } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
@@ -9,18 +8,6 @@ export const dynamic = "force-dynamic";
 export async function GET() {
   if (!(await isAdmin())) {
     return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
-
-  try {
-    await checkRateLimit(`backup:${await getClientIp()}`, 10, 3600);
-  } catch (error) {
-    if (error instanceof RateLimitError) {
-      return NextResponse.json(
-        { error: "Demasiadas descargas. Intenta de nuevo más tarde." },
-        { status: 429, headers: { "Retry-After": String(error.retryAfterSeconds) } },
-      );
-    }
-    throw error;
   }
 
   const [
