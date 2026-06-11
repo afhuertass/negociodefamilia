@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8fafc;
+  --foreground: #020617;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.input {
+  @apply w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-xl bg-emerald-600 px-4 py-2 text-sm font-bold text-white shadow-sm hover:bg-emerald-700;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-bold text-slate-800 shadow-sm hover:bg-slate-50;
+}
+
+.card {
+  @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-sm;
+}
