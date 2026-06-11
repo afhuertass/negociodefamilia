@@ -1,9 +1,18 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { checkRateLimit, getClientIp, RateLimitError } from "@/lib/rateLimit";
 
 async function enter(formData: FormData) {
   "use server";
+  const ip = await getClientIp();
+  try {
+    await checkRateLimit(`participant-login:${ip}`, 20, 600);
+  } catch (error) {
+    if (error instanceof RateLimitError) redirect("/entrar?error=rate-limit");
+    throw error;
+  }
+
   const name = String(formData.get("name") || "").trim();
   const accessCode = String(formData.get("accessCode") || "").trim();
   if (!name || !accessCode) throw new Error("Nombre y código son requeridos");
@@ -24,7 +33,8 @@ export default async function EnterPage({ searchParams }: { searchParams: Promis
     <div className="mx-auto max-w-md card">
       <h1 className="text-3xl font-black">Entrar</h1>
       <p className="mt-2 text-sm text-slate-600">Usa tu nombre y un código simple. Si es tu primera vez, se crea automáticamente.</p>
-      {error && <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-700">Código incorrecto para ese nombre.</p>}
+      {error === "rate-limit" && <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-700">Demasiados intentos. Intenta de nuevo en unos minutos.</p>}
+      {error && error !== "rate-limit" && <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-700">Código incorrecto para ese nombre.</p>}
       <form action={enter} className="mt-6 space-y-4">
         <label className="block text-sm font-bold">Nombre
           <input className="input mt-1" name="name" placeholder="Ej: Tía Marta" required />

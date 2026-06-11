@@ -4,11 +4,20 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { getPhaseLocks, phaseLabels, setPhaseLocked } from "@/lib/locks";
+import { checkRateLimit, getClientIp, RateLimitError } from "@/lib/rateLimit";
 import { isAdmin } from "@/lib/session";
 import { scoreGroupStage, scoreRound } from "@/lib/scoring";
 
 async function loginAdmin(formData: FormData) {
   "use server";
+  const ip = await getClientIp();
+  try {
+    await checkRateLimit(`admin-login:${ip}`, 5, 600);
+  } catch (error) {
+    if (error instanceof RateLimitError) redirect("/admin?error=rate-limit");
+    throw error;
+  }
+
   const key = String(formData.get("key") || "");
   if (key !== process.env.ADMIN_KEY) redirect("/admin?error=1");
   (await cookies()).set("admin", key, { path: "/", httpOnly: true, sameSite: "lax" });
@@ -92,7 +101,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     return (
       <div className="mx-auto max-w-md card">
         <h1 className="text-3xl font-black">Admin</h1>
-        {params.error && <p className="mt-4 text-sm font-semibold text-red-700">Clave incorrecta.</p>}
+        {params.error === "rate-limit" && <p className="mt-4 text-sm font-semibold text-red-700">Demasiados intentos. Intenta de nuevo en unos minutos.</p>}
+        {params.error && params.error !== "rate-limit" && <p className="mt-4 text-sm font-semibold text-red-700">Clave incorrecta.</p>}
         <form action={loginAdmin} className="mt-6 space-y-4">
           <input className="input" name="key" placeholder="Clave admin" />
           <button className="btn w-full">Entrar</button>
@@ -122,6 +132,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           {params.cleared && <p className="mt-2 text-sm font-semibold text-amber-700">Resultados reales limpiados.</p>}
           {params.locks && <p className="mt-2 text-sm font-semibold text-emerald-700">Bloqueos actualizados.</p>}
           {params.error === "qualified-limit" && <p className="mt-2 text-sm font-semibold text-red-700">Máximo 24 clasificados 1º/2º y 8 mejores terceros.</p>}
+          {params.error === "rate-limit" && <p className="mt-2 text-sm font-semibold text-red-700">Demasiados intentos. Intenta de nuevo en unos minutos.</p>}
         </div>
         <div className="flex flex-wrap gap-2">
           <Link href="/admin/partidos" className="btn-secondary">Resultados eliminatorias</Link>
