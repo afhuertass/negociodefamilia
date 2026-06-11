@@ -39,6 +39,18 @@ async function assignTeams(formData: FormData) {
   redirect("/admin/partidos");
 }
 
+async function clearResult(formData: FormData) {
+  "use server";
+  if (!(await isAdmin())) redirect("/admin");
+  const matchId = String(formData.get("matchId") || "");
+  if (!matchId) redirect("/admin/partidos");
+  await prisma.$transaction([
+    prisma.matchResult.deleteMany({ where: { matchId } }),
+    prisma.match.update({ where: { id: matchId }, data: { finished: false, locked: false } }),
+  ]);
+  redirect("/admin/partidos");
+}
+
 async function saveResult(formData: FormData) {
   "use server";
   if (!(await isAdmin())) redirect("/admin");
@@ -191,6 +203,15 @@ export default async function AdminMatchesPage({ searchParams }: { searchParams:
                       </label>
                       <button className="btn self-end" disabled={!teamsReady}>Guardar resultado</button>
                     </form>
+
+                    {match.result && (
+                      <form action={clearResult} className="mt-3 text-right">
+                        <input type="hidden" name="matchId" value={match.id} />
+                        <button className="rounded-xl border border-red-200 px-3 py-2 text-xs font-bold text-red-700 hover:bg-red-50" type="submit">
+                          Borrar resultado y desbloquear
+                        </button>
+                      </form>
+                    )}
                   </div>
                 );
               })}

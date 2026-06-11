@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { phaseLabels } from "@/lib/locks";
+import { scoreMatchPrediction } from "@/lib/scoringRules";
 
 const roundOrder = [
   Round.GROUP_STAGE,
@@ -102,21 +103,40 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
                     <th className="p-3">Predicción</th>
                     <th className="p-3">Clasifica</th>
                     <th className="p-3">Resultado real</th>
+                    <th className="p-3 text-right">Puntos</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {predictions.map((prediction) => (
-                    <tr key={prediction.id} className="border-b last:border-0">
-                      <td className="p-3 font-semibold">{matchLabel(prediction)}</td>
-                      <td className="p-3 font-black">{prediction.homeGoals} - {prediction.awayGoals}</td>
-                      <td className="p-3">{prediction.qualifiedTeam.name}</td>
-                      <td className="p-3 text-slate-600">
-                        {prediction.match.result
-                          ? `${prediction.match.result.homeGoals} - ${prediction.match.result.awayGoals}, clasifica ${prediction.match.result.qualifiedTeam.name}`
-                          : "Pendiente"}
-                      </td>
-                    </tr>
-                  ))}
+                  {predictions.map((prediction) => {
+                    const result = prediction.match.result;
+                    const awarded = result
+                      ? scoreMatchPrediction({
+                          round,
+                          predictedHomeGoals: prediction.homeGoals,
+                          predictedAwayGoals: prediction.awayGoals,
+                          predictedQualifiedTeamId: prediction.qualifiedTeamId,
+                          actualHomeGoals: result.homeGoals,
+                          actualAwayGoals: result.awayGoals,
+                          actualQualifiedTeamId: result.qualifiedTeamId,
+                        }).points
+                      : null;
+
+                    return (
+                      <tr key={prediction.id} className="border-b last:border-0">
+                        <td className="p-3 font-semibold">{matchLabel(prediction)}</td>
+                        <td className="p-3 font-black">{prediction.homeGoals} - {prediction.awayGoals}</td>
+                        <td className="p-3">{prediction.qualifiedTeam.name}</td>
+                        <td className="p-3 text-slate-600">
+                          {result
+                            ? `${result.homeGoals} - ${result.awayGoals}, clasifica ${result.qualifiedTeam.name}`
+                            : "Pendiente"}
+                        </td>
+                        <td className="p-3 text-right font-black text-emerald-700">
+                          {awarded === null ? "—" : awarded}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             )}

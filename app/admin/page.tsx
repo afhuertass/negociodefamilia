@@ -27,6 +27,15 @@ async function addTeam(formData: FormData) {
   redirect("/admin");
 }
 
+async function deleteParticipant(formData: FormData) {
+  "use server";
+  if (!(await isAdmin())) redirect("/admin");
+  const participantId = String(formData.get("participantId") || "");
+  if (!participantId) redirect("/admin?error=participant-delete");
+  await prisma.participant.delete({ where: { id: participantId } });
+  redirect("/admin?participantDeleted=1");
+}
+
 async function saveQualified(formData: FormData) {
   "use server";
   if (!(await isAdmin())) redirect("/admin");
@@ -85,7 +94,7 @@ async function updateLocks(formData: FormData) {
   redirect("/admin?locks=1");
 }
 
-export default async function AdminPage({ searchParams }: { searchParams: Promise<{ error?: string; scored?: string; cleared?: string; locks?: string }> }) {
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ error?: string; scored?: string; cleared?: string; locks?: string; participantDeleted?: string }> }) {
   const params = await searchParams;
   const admin = await isAdmin();
   if (!admin) {
@@ -121,7 +130,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           {params.scored && <p className="mt-2 text-sm font-semibold text-emerald-700">Resultados guardados y puntajes recalculados.</p>}
           {params.cleared && <p className="mt-2 text-sm font-semibold text-amber-700">Resultados reales limpiados.</p>}
           {params.locks && <p className="mt-2 text-sm font-semibold text-emerald-700">Bloqueos actualizados.</p>}
+          {params.participantDeleted && <p className="mt-2 text-sm font-semibold text-emerald-700">Participante eliminado.</p>}
           {params.error === "qualified-limit" && <p className="mt-2 text-sm font-semibold text-red-700">Máximo 24 clasificados 1º/2º y 8 mejores terceros.</p>}
+          {params.error === "participant-delete" && <p className="mt-2 text-sm font-semibold text-red-700">No se pudo eliminar el participante.</p>}
         </div>
         <div className="flex flex-wrap gap-2">
           <Link href="/admin/partidos" className="btn-secondary">Resultados eliminatorias</Link>
@@ -153,6 +164,39 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs font-bold uppercase text-slate-500">Equipos</p><p className="text-2xl font-black">{teams.length}</p></div>
           <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs font-bold uppercase text-slate-500">1º/2º reales</p><p className="text-2xl font-black">{actualTop.size}/24</p></div>
           <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs font-bold uppercase text-slate-500">Mejores terceros</p><p className="text-2xl font-black">{actualThird.size}/8</p></div>
+        </div>
+      </section>
+
+      <section className="card">
+        <h2 className="text-xl font-black">Participantes</h2>
+        <p className="mt-2 text-sm text-slate-600">Eliminar un participante borra también sus predicciones y puntajes.</p>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[520px] text-left text-sm">
+            <thead className="border-b bg-slate-50 text-slate-600">
+              <tr>
+                <th className="p-3">Nombre</th>
+                <th className="p-3">Creado</th>
+                <th className="p-3 text-right">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              {participants.map((participant) => (
+                <tr key={participant.id} className="border-b last:border-0">
+                  <td className="p-3 font-bold">{participant.name}</td>
+                  <td className="p-3 text-slate-600">{participant.createdAt.toLocaleString("es", { dateStyle: "medium", timeStyle: "short" })}</td>
+                  <td className="p-3 text-right">
+                    <form action={deleteParticipant}>
+                      <input type="hidden" name="participantId" value={participant.id} />
+                      <button className="rounded-xl border border-red-200 px-3 py-1 text-xs font-bold text-red-700 hover:bg-red-50" type="submit">
+                        Eliminar
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              ))}
+              {participants.length === 0 && <tr><td className="p-3 text-slate-500" colSpan={3}>No hay participantes registrados.</td></tr>}
+            </tbody>
+          </table>
         </div>
       </section>
 

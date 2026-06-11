@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "node prisma/seed.js",
-    "seed:knockout": "node prisma/seed-knockout.js"
+    "seed:knockout": "node prisma/seed-knockout.js",
+    "check:scoring": "node scripts/check-scoring.mjs"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",

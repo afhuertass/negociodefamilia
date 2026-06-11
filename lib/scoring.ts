@@ -1,5 +1,6 @@
 import { Round } from "@prisma/client";
 import { prisma } from "@/lib/db";
+import { scoreMatchPrediction } from "@/lib/scoringRules";
 
 export async function scoreGroupStage() {
   const actual = await prisma.actualQualifiedTeam.findMany();
@@ -45,43 +46,19 @@ export async function scoreRound(round: Round) {
       const prediction = match.predictions.find((p) => p.participantId === participant.id);
       if (!prediction) continue;
 
-      const exact =
-        prediction.homeGoals === result.homeGoals && prediction.awayGoals === result.awayGoals;
-      const predictedDraw = prediction.homeGoals === prediction.awayGoals;
-      const actualDraw = result.homeGoals === result.awayGoals;
-      const classified = prediction.qualifiedTeamId === result.qualifiedTeamId;
+      const breakdown = scoreMatchPrediction({
+        round,
+        predictedHomeGoals: prediction.homeGoals,
+        predictedAwayGoals: prediction.awayGoals,
+        predictedQualifiedTeamId: prediction.qualifiedTeamId,
+        actualHomeGoals: result.homeGoals,
+        actualAwayGoals: result.awayGoals,
+        actualQualifiedTeamId: result.qualifiedTeamId,
+      });
 
-      if (classified) qualifiedHits += 1;
-
-      if (round === Round.FINAL) {
-        if (exact && classified) {
-          points += 5;
-          exactScores += 1;
-        } else if (actualDraw && predictedDraw) {
-          points += 1;
-        } else if (classified) {
-          points += 3;
-        }
-        continue;
-      }
-
-      if (predictedDraw) {
-        if (exact && classified) {
-          points += 3;
-          exactScores += 1;
-        } else if (actualDraw && classified) {
-          points += 2;
-        } else if (actualDraw) {
-          points += 1;
-        } else if (classified) {
-          points += 1;
-        }
-      } else if (exact) {
-        points += 3;
-        exactScores += 1;
-      } else if (classified) {
-        points += 1;
-      }
+      points += breakdown.points;
+      if (breakdown.exactScoreHit) exactScores += 1;
+      if (breakdown.qualifiedHit) qualifiedHits += 1;
     }
 
     await prisma.score.upsert({
