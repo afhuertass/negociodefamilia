@@ -34,7 +34,7 @@ export async function GET() {
 
   const backup = {
     exportedAt: new Date().toISOString(),
-    app: "Polla Familia Huertas & Páez",
+    app: "Polla Mundialista Familia Huertas & Páez",
     version: 1,
     counts: {
       participants: participants.length,

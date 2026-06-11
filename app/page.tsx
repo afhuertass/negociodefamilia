@@ -5,7 +5,7 @@ export default function Home() {
     <div className="grid gap-6 md:grid-cols-[1.4fr_1fr]">
       <section className="card bg-gradient-to-br from-emerald-600 to-sky-700 p-8 text-white">
         <p className="text-sm font-bold uppercase tracking-widest opacity-80">MVP familiar</p>
-        <h1 className="mt-4 text-4xl font-black tracking-tight md:text-6xl">Polla Familia Huertas & Páez</h1>
+        <h1 className="mt-4 text-4xl font-black tracking-tight md:text-6xl">Polla Mundialista Familia Huertas & Páez</h1>
         <p className="mt-4 max-w-2xl text-lg text-emerald-50">
           Entra con tu nombre y un código simple, llena tus predicciones y revisa la tabla de posiciones después de cada ronda.
         </p>

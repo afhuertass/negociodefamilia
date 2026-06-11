@@ -15,7 +15,7 @@ async function logout() {
 }
 
 export const metadata: Metadata = {
-  title: "Polla Familia Huertas & Páez",
+  title: "Polla Mundialista Familia Huertas & Páez",
   description: "Predicciones familiares para el Mundial 2026",
 };
 
@@ -30,7 +30,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body className="min-h-full bg-slate-50 text-slate-950">
         <header className="border-b bg-white">
           <nav className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4">
-            <Link href="/" className="text-xl font-black">Polla Familia Huertas & Páez</Link>
+            <Link href="/" className="text-xl font-black">Polla Mundialista Familia Huertas & Páez</Link>
             <div className="flex flex-wrap items-center gap-3 text-sm font-semibold text-slate-700">
               {participant?.name && (
                 <span className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700">
