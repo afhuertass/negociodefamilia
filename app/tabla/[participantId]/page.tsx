@@ -49,7 +49,10 @@ async function getParticipantData(participantId: string) {
 
 export default async function ParticipantPredictionsPage({ params }: { params: Promise<{ participantId: string }> }) {
   const { participantId } = await params;
-  const participant = await getParticipantData(participantId);
+  const [participant, actualQualifiedTeams] = await Promise.all([
+    getParticipantData(participantId),
+    prisma.actualQualifiedTeam.findMany(),
+  ]);
   if (!participant) notFound();
 
   const totalPoints = participant.scores.reduce((sum, score) => sum + score.points, 0);
@@ -57,6 +60,8 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
   const qualifiedHits = participant.scores.reduce((sum, score) => sum + score.qualifiedHits, 0);
   const topTwo = participant.groupPredictions.filter((p) => p.type === PredictionType.TOP_TWO);
   const bestThird = participant.groupPredictions.filter((p) => p.type === PredictionType.BEST_THIRD);
+  const actualGroupKeys = new Set(actualQualifiedTeams.map((item) => `${item.teamId}:${item.type}`));
+  const groupStagePoints = participant.scores.find((score) => score.phase === Round.GROUP_STAGE)?.points ?? 0;
 
   return (
     <div className="space-y-6">
@@ -71,19 +76,38 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
       </section>
 
       <section className="card">
-        <h2 className="text-2xl font-black">Fase de grupos</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-2xl font-black">Fase de grupos</h2>
+          <span className="rounded-full bg-emerald-50 px-4 py-2 text-sm font-black text-emerald-700">
+            {groupStagePoints} puntos
+          </span>
+        </div>
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           <div className="rounded-2xl border p-4">
             <h3 className="font-black">1º / 2º de grupo ({topTwo.length}/24)</h3>
             <div className="mt-3 flex flex-wrap gap-2">
-              {topTwo.map((p) => <span key={p.id} className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-800">{p.team.group} · {p.team.name}</span>)}
+              {topTwo.map((p) => {
+                const hit = actualGroupKeys.has(`${p.teamId}:${p.type}`);
+                return (
+                  <span key={p.id} className={`rounded-full px-3 py-1 text-sm font-semibold ${hit ? "bg-emerald-50 text-emerald-800" : "bg-slate-100 text-slate-700"}`}>
+                    {p.team.group} · {p.team.name} <b>{hit ? "+1" : "0"}</b>
+                  </span>
+                );
+              })}
               {topTwo.length === 0 && <p className="text-sm text-slate-500">Sin predicciones.</p>}
             </div>
           </div>
           <div className="rounded-2xl border p-4">
             <h3 className="font-black">Mejores terceros ({bestThird.length}/8)</h3>
             <div className="mt-3 flex flex-wrap gap-2">
-              {bestThird.map((p) => <span key={p.id} className="rounded-full bg-sky-50 px-3 py-1 text-sm font-semibold text-sky-800">{p.team.group} · {p.team.name}</span>)}
+              {bestThird.map((p) => {
+                const hit = actualGroupKeys.has(`${p.teamId}:${p.type}`);
+                return (
+                  <span key={p.id} className={`rounded-full px-3 py-1 text-sm font-semibold ${hit ? "bg-sky-50 text-sky-800" : "bg-slate-100 text-slate-700"}`}>
+                    {p.team.group} · {p.team.name} <b>{hit ? "+1" : "0"}</b>
+                  </span>
+                );
+              })}
               {bestThird.length === 0 && <p className="text-sm text-slate-500">Sin predicciones.</p>}
             </div>
           </div>
