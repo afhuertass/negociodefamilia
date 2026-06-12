@@ -1,6 +1,30 @@
 import { Round } from "@prisma/client";
 import { prisma } from "@/lib/db";
 
+const CALENDAR_TIME_ZONE = "America/Mexico_City";
+
+const dayFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: CALENDAR_TIME_ZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+const todayDisplayFormatter = new Intl.DateTimeFormat("es", {
+  timeZone: CALENDAR_TIME_ZONE,
+  dateStyle: "full",
+});
+
+const matchDateFormatter = new Intl.DateTimeFormat("es", {
+  timeZone: CALENDAR_TIME_ZONE,
+  dateStyle: "medium",
+  timeStyle: "short",
+});
+
+function teamName(match: { homeTeam?: { name: string } | null; awayTeam?: { name: string } | null; homeSlot?: string | null; awaySlot?: string | null }) {
+  return `${match.homeTeam?.name || match.homeSlot || "Por definir"} vs ${match.awayTeam?.name || match.awaySlot || "Por definir"}`;
+}
+
 export default async function CalendarPage() {
   const [teams, matches] = await Promise.all([
     prisma.team.findMany({ orderBy: [{ group: "asc" }, { name: "asc" }] }),
@@ -11,6 +35,8 @@ export default async function CalendarPage() {
     }),
   ]);
   const groups = [...new Set(teams.map((t) => t.group || "Sin grupo"))];
+  const todayKey = dayFormatter.format(new Date());
+  const todayMatches = matches.filter((match) => match.startsAt && dayFormatter.format(match.startsAt) === todayKey);
 
   return (
     <div className="space-y-6">
@@ -19,6 +45,35 @@ export default async function CalendarPage() {
         <p className="mt-2 text-sm text-slate-600">
           Equipos y partidos cargados para la fase de grupos. Por ahora se incluyó lo que se pegó: grupos A-K y partidos A-J.
         </p>
+      </section>
+
+      <section className="card border-emerald-200 bg-emerald-50">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-sm font-black uppercase tracking-wide text-emerald-700">Hoy</p>
+            <h2 className="text-2xl font-black">Partidos de hoy</h2>
+          </div>
+          <p className="text-sm font-semibold text-emerald-800">{todayDisplayFormatter.format(new Date())}</p>
+        </div>
+
+        {todayMatches.length > 0 ? (
+          <div className="mt-4 grid gap-3 md:grid-cols-2">
+            {todayMatches.map((match) => (
+              <div key={match.id} className="rounded-2xl border border-emerald-200 bg-white p-4 shadow-sm">
+                <div className="flex items-center justify-between gap-3 text-sm text-slate-600">
+                  <span className="font-black text-emerald-700">Partido #{match.matchNumber}</span>
+                  <span>{match.startsAt ? matchDateFormatter.format(match.startsAt) : "Hora por definir"}</span>
+                </div>
+                <p className="mt-2 text-lg font-black">{teamName(match)}</p>
+                {match.stadium ? <p className="mt-1 text-sm text-slate-600">{match.stadium}</p> : null}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-4 rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-slate-600">
+            No hay partidos programados para hoy.
+          </p>
+        )}
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -49,8 +104,8 @@ export default async function CalendarPage() {
             {matches.map((match) => (
               <tr key={match.id} className="border-b last:border-0">
                 <td className="p-3 font-black">{match.matchNumber}</td>
-                <td className="p-3">{match.startsAt?.toLocaleString("es", { dateStyle: "medium", timeStyle: "short" })}</td>
-                <td className="p-3 font-bold">{match.homeTeam?.name || match.homeSlot || "Por definir"} vs {match.awayTeam?.name || match.awaySlot || "Por definir"}</td>
+                <td className="p-3">{match.startsAt ? matchDateFormatter.format(match.startsAt) : "Por definir"}</td>
+                <td className="p-3 font-bold">{teamName(match)}</td>
                 <td className="p-3 text-slate-600">{match.stadium}</td>
               </tr>
             ))}
