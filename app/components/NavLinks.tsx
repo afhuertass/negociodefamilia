@@ -32,6 +32,21 @@ const navItems: NavItem[] = [
   { href: "/admin", label: "Admin", icon: "🔒", match: "startsWith" },
 ];
 
+const mobilePrimaryItems: NavItem[] = [
+  { href: "/", label: "Inicio", icon: "🏠", match: "exact" },
+  { href: "/predicciones", label: "Predicciones", icon: "🎯", match: "startsWith" },
+  { href: "/tabla", label: "Tabla", icon: "📊", match: "startsWith" },
+  { href: "/calendario", label: "Calendario", icon: "🗓️", match: "startsWith" },
+];
+
+const mobileMoreItems: NavItem[] = [
+  { href: "/entrar", label: "Entrar", icon: "👋", match: "startsWith" },
+  { href: "/predicciones/grupos", label: "Clasificados", icon: "🏆", match: "startsWith" },
+  { href: "/predicciones/dieciseisavos", label: "Eliminatorias", icon: "⚽", match: "startsWith" },
+  { href: "/reglas", label: "Reglas", icon: "📜", match: "startsWith" },
+  { href: "/admin", label: "Admin", icon: "🔒", match: "startsWith" },
+];
+
 const confettiColors = ["#10b981", "#38bdf8", "#f59e0b", "#f43f5e", "#8b5cf6", "#22c55e"];
 
 function isActive(pathname: string, item: NavItem) {
@@ -42,6 +57,7 @@ function isActive(pathname: string, item: NavItem) {
 export function NavLinks() {
   const pathname = usePathname();
   const [pieces, setPieces] = useState<ConfettiPiece[]>([]);
+  const [moreOpen, setMoreOpen] = useState(false);
 
   useEffect(() => {
     if (pieces.length === 0) return;
@@ -72,7 +88,7 @@ export function NavLinks() {
 
   return (
     <>
-      <div className="flex flex-wrap items-center justify-end gap-2 text-sm font-semibold text-slate-700">
+      <div className="hidden flex-wrap items-center justify-end gap-2 text-sm font-semibold text-slate-700 md:flex">
         {navItems.map((item) => {
           const active = isActive(pathname, item);
           return (
@@ -95,6 +111,80 @@ export function NavLinks() {
             </Link>
           );
         })}
+      </div>
+
+      <div className="md:hidden">
+        {moreOpen && (
+          <div className="fixed inset-0 z-40 bg-slate-950/20" onClick={() => setMoreOpen(false)}>
+            <div className="absolute bottom-24 right-4 w-64 rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl" onClick={(event) => event.stopPropagation()}>
+              <p className="px-3 pb-2 text-xs font-black uppercase tracking-widest text-slate-500">Más opciones</p>
+              <div className="space-y-1">
+                {mobileMoreItems.map((item) => {
+                  const active = isActive(pathname, item);
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={(event) => {
+                        popConfetti(event);
+                        setMoreOpen(false);
+                      }}
+                      className={[
+                        "flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-bold",
+                        active ? "bg-emerald-50 text-emerald-800" : "text-slate-700 hover:bg-slate-50",
+                      ].join(" ")}
+                    >
+                      <span aria-hidden="true">{item.icon}</span>
+                      <span>{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        <nav
+          className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-2 pt-2 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl"
+          style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 0.5rem)" }}
+          aria-label="Navegación móvil"
+        >
+          <div className="mx-auto grid max-w-md grid-cols-5 gap-1">
+            {mobilePrimaryItems.map((item) => {
+              const active = isActive(pathname, item);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={(event) => {
+                    popConfetti(event);
+                    setMoreOpen(false);
+                  }}
+                  aria-current={active ? "page" : undefined}
+                  className={[
+                    "flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-black transition",
+                    active ? "bg-emerald-600 text-white" : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-800",
+                  ].join(" ")}
+                >
+                  <span className="text-lg leading-none" aria-hidden="true">{item.icon}</span>
+                  <span className="leading-none">{item.label}</span>
+                </Link>
+              );
+            })}
+            <button
+              type="button"
+              onClick={() => setMoreOpen((open) => !open)}
+              aria-expanded={moreOpen}
+              className={[
+                "flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-black transition",
+                moreOpen ? "bg-emerald-600 text-white" : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-800",
+              ].join(" ")}
+            >
+              <span className="text-lg leading-none" aria-hidden="true">•••</span>
+              <span className="leading-none">Más</span>
+            </button>
+          </div>
+        </nav>
       </div>
 
       <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden" aria-hidden="true">
