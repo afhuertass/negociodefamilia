@@ -66,6 +66,11 @@ export default async function GroupPredictionsPage({ searchParams }: { searchPar
 
       {teams.length > 0 && (
         <form action={saveGroupPredictions} className="space-y-6">
+          {!locked && (
+            <div className="sticky top-4 z-10 rounded-2xl border border-emerald-200 bg-white/95 p-4 shadow-sm backdrop-blur">
+              <button className="btn">Guardar avance</button>
+            </div>
+          )}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {groups.map((group) => (
               <section key={group} className="card">
@@ -82,7 +87,6 @@ export default async function GroupPredictionsPage({ searchParams }: { searchPar
               </section>
             ))}
           </div>
-          {!locked && <button className="btn">Guardar avance</button>}
         </form>
       )}
     </div>
