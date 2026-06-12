@@ -55,7 +55,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
             </div>
           </nav>
         </header>
-        <main className="mx-auto w-full max-w-6xl px-4 pb-28 pt-8 md:pb-8">{children}</main>
+        <main className="mx-auto w-full max-w-6xl px-4 py-8">{children}</main>
       </body>
     </html>
   );

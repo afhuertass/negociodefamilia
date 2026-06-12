@@ -23,28 +23,19 @@ type ConfettiPiece = {
 
 const navItems: NavItem[] = [
   { href: "/entrar", label: "Entrar", icon: "👋", match: "startsWith" },
-  { href: "/predicciones", label: "Predicciones", icon: "🎯", match: "exact" },
-  { href: "/predicciones/grupos", label: "Clasificados", icon: "🏆", match: "startsWith" },
-  { href: "/predicciones/dieciseisavos", label: "Eliminatorias", icon: "⚽", match: "startsWith" },
-  { href: "/tabla", label: "Tabla", icon: "📊", match: "startsWith" },
-  { href: "/calendario", label: "Calendario", icon: "🗓️", match: "startsWith" },
-  { href: "/reglas", label: "Reglas", icon: "📜", match: "startsWith" },
-  { href: "/admin", label: "Admin", icon: "🔒", match: "startsWith" },
-];
-
-const mobilePrimaryItems: NavItem[] = [
-  { href: "/", label: "Inicio", icon: "🏠", match: "exact" },
   { href: "/predicciones", label: "Predicciones", icon: "🎯", match: "startsWith" },
   { href: "/tabla", label: "Tabla", icon: "📊", match: "startsWith" },
   { href: "/calendario", label: "Calendario", icon: "🗓️", match: "startsWith" },
-];
-
-const mobileMoreItems: NavItem[] = [
-  { href: "/entrar", label: "Entrar", icon: "👋", match: "startsWith" },
-  { href: "/predicciones/grupos", label: "Clasificados", icon: "🏆", match: "startsWith" },
-  { href: "/predicciones/dieciseisavos", label: "Eliminatorias", icon: "⚽", match: "startsWith" },
   { href: "/reglas", label: "Reglas", icon: "📜", match: "startsWith" },
   { href: "/admin", label: "Admin", icon: "🔒", match: "startsWith" },
+];
+
+const knockoutItems: NavItem[] = [
+  { href: "/predicciones/dieciseisavos", label: "Dieciseisavos", icon: "⚽", match: "startsWith" },
+  { href: "/predicciones/octavos", label: "Octavos", icon: "🎯", match: "startsWith" },
+  { href: "/predicciones/cuartos", label: "Cuartos", icon: "🏟️", match: "startsWith" },
+  { href: "/predicciones/semifinales", label: "Semifinales", icon: "🔥", match: "startsWith" },
+  { href: "/predicciones/final", label: "Final", icon: "🏆", match: "startsWith" },
 ];
 
 const confettiColors = ["#10b981", "#38bdf8", "#f59e0b", "#f43f5e", "#8b5cf6", "#22c55e"];
@@ -57,7 +48,7 @@ function isActive(pathname: string, item: NavItem) {
 export function NavLinks() {
   const pathname = usePathname();
   const [pieces, setPieces] = useState<ConfettiPiece[]>([]);
-  const [moreOpen, setMoreOpen] = useState(false);
+  const [predictionsOpen, setPredictionsOpen] = useState(false);
 
   useEffect(() => {
     if (pieces.length === 0) return;
@@ -88,14 +79,86 @@ export function NavLinks() {
 
   return (
     <>
-      <div className="hidden flex-wrap items-center justify-end gap-2 text-sm font-semibold text-slate-700 md:flex">
+      <div className="flex flex-wrap items-center justify-end gap-2 text-sm font-semibold text-slate-700">
         {navItems.map((item) => {
           const active = isActive(pathname, item);
+
+          if (item.href === "/predicciones") {
+            return (
+              <div key={item.href} className="relative">
+                <div
+                  className={[
+                    "group relative inline-flex items-center overflow-hidden rounded-full border shadow-sm transition-all duration-200",
+                    "hover:-translate-y-0.5 hover:shadow-md focus-within:ring-2 focus-within:ring-emerald-500 focus-within:ring-offset-2",
+                    active
+                      ? "border-emerald-200 bg-emerald-600 text-white shadow-emerald-100"
+                      : "border-slate-200 bg-white/80 text-slate-700 hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-800",
+                  ].join(" ")}
+                >
+                  <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/35 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
+                  <button
+                    type="button"
+                    onClick={() => setPredictionsOpen((open) => !open)}
+                    onMouseEnter={() => setPredictionsOpen(true)}
+                    aria-expanded={predictionsOpen}
+                    aria-current={active ? "page" : undefined}
+                    className="relative inline-flex items-center gap-1.5 px-3 py-2 focus:outline-none"
+                  >
+                    <span aria-hidden="true">{item.icon}</span>
+                    <span>{item.label}</span>
+                    <span className="text-xs" aria-hidden="true">▾</span>
+                  </button>
+                </div>
+
+                {predictionsOpen && (
+                  <div className="absolute left-0 top-full z-50 mt-2 w-56 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                    <Link
+                      href="/predicciones"
+                      onClick={(event) => {
+                        popConfetti(event);
+                        setPredictionsOpen(false);
+                      }}
+                      className="mb-1 flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold text-slate-700 transition hover:bg-slate-50 hover:text-emerald-800"
+                    >
+                      <span aria-hidden="true">🎯</span>
+                      <span>Todas las predicciones</span>
+                    </Link>
+                    <div className="my-1 border-t border-slate-100" />
+                    {knockoutItems.map((knockoutItem) => {
+                      const knockoutActive = isActive(pathname, knockoutItem);
+                      return (
+                        <Link
+                          key={knockoutItem.href}
+                          href={knockoutItem.href}
+                          onClick={(event) => {
+                            popConfetti(event);
+                            setPredictionsOpen(false);
+                          }}
+                          aria-current={knockoutActive ? "page" : undefined}
+                          className={[
+                            "flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-bold transition",
+                            knockoutActive ? "bg-emerald-50 text-emerald-800" : "text-slate-700 hover:bg-slate-50 hover:text-emerald-800",
+                          ].join(" ")}
+                        >
+                          <span aria-hidden="true">{knockoutItem.icon}</span>
+                          <span>{knockoutItem.label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          }
+
           return (
             <Link
               key={item.href}
               href={item.href}
-              onClick={popConfetti}
+              onClick={(event) => {
+                popConfetti(event);
+                setPredictionsOpen(false);
+              }}
               aria-current={active ? "page" : undefined}
               className={[
                 "group relative inline-flex items-center gap-1.5 overflow-hidden rounded-full border px-3 py-2 shadow-sm transition-all duration-200",
@@ -113,79 +176,6 @@ export function NavLinks() {
         })}
       </div>
 
-      <div className="md:hidden">
-        {moreOpen && (
-          <div className="fixed inset-0 z-40 bg-slate-950/20" onClick={() => setMoreOpen(false)}>
-            <div className="absolute bottom-24 right-4 w-64 rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl" onClick={(event) => event.stopPropagation()}>
-              <p className="px-3 pb-2 text-xs font-black uppercase tracking-widest text-slate-500">Más opciones</p>
-              <div className="space-y-1">
-                {mobileMoreItems.map((item) => {
-                  const active = isActive(pathname, item);
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={(event) => {
-                        popConfetti(event);
-                        setMoreOpen(false);
-                      }}
-                      className={[
-                        "flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-bold",
-                        active ? "bg-emerald-50 text-emerald-800" : "text-slate-700 hover:bg-slate-50",
-                      ].join(" ")}
-                    >
-                      <span aria-hidden="true">{item.icon}</span>
-                      <span>{item.label}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
-
-        <nav
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-2 pt-2 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] backdrop-blur-xl"
-          style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 0.5rem)" }}
-          aria-label="Navegación móvil"
-        >
-          <div className="mx-auto grid max-w-md grid-cols-5 gap-1">
-            {mobilePrimaryItems.map((item) => {
-              const active = isActive(pathname, item);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={(event) => {
-                    popConfetti(event);
-                    setMoreOpen(false);
-                  }}
-                  aria-current={active ? "page" : undefined}
-                  className={[
-                    "flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-black transition",
-                    active ? "bg-emerald-600 text-white" : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-800",
-                  ].join(" ")}
-                >
-                  <span className="text-lg leading-none" aria-hidden="true">{item.icon}</span>
-                  <span className="leading-none">{item.label}</span>
-                </Link>
-              );
-            })}
-            <button
-              type="button"
-              onClick={() => setMoreOpen((open) => !open)}
-              aria-expanded={moreOpen}
-              className={[
-                "flex flex-col items-center justify-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-black transition",
-                moreOpen ? "bg-emerald-600 text-white" : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-800",
-              ].join(" ")}
-            >
-              <span className="text-lg leading-none" aria-hidden="true">•••</span>
-              <span className="leading-none">Más</span>
-            </button>
-          </div>
-        </nav>
-      </div>
 
       <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden" aria-hidden="true">
         {pieces.map((piece) => (
