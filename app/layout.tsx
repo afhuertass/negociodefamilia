@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
+import { NavLinks } from "@/app/components/NavLinks";
 import { prisma } from "@/lib/db";
 import { getParticipantId } from "@/lib/session";
 import "./globals.css";
@@ -28,28 +29,29 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="es" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full bg-slate-50 text-slate-950">
-        <header className="border-b bg-white">
-          <nav className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-4">
-            <Link href="/" className="text-xl font-black">Polla Mundialista Familiar</Link>
-            <div className="flex flex-wrap items-center gap-3 text-sm font-semibold text-slate-700">
+        <header className="sticky top-0 z-40 border-b border-emerald-100/70 bg-white/85 shadow-sm shadow-emerald-950/5 backdrop-blur-xl">
+          <nav className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3">
+            <Link href="/" className="group inline-flex items-center gap-3 rounded-full p-1 pr-4 transition hover:bg-emerald-50">
+              <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-600 text-lg shadow-lg shadow-emerald-500/20 transition group-hover:rotate-6 group-hover:scale-105">
+                ⚽
+              </span>
+              <span className="leading-tight">
+                <span className="block text-base font-black text-slate-950 md:text-lg">Polla Mundialista</span>
+                <span className="block text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">Familiar</span>
+              </span>
+            </Link>
+            <div className="flex flex-1 flex-wrap items-center justify-end gap-3">
               {participant?.name && (
-                <span className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700">
+                <span className="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-700 shadow-sm">
                   Activo: {participant.name}
                 </span>
               )}
               {participant?.name && (
                 <form action={logout}>
-                  <button className="text-slate-500 hover:text-red-700" type="submit">Salir</button>
+                  <button className="rounded-full border border-red-100 bg-white px-3 py-2 text-sm font-bold text-slate-500 shadow-sm transition hover:-translate-y-0.5 hover:bg-red-50 hover:text-red-700" type="submit">Salir</button>
                 </form>
               )}
-              <Link href="/entrar">Entrar</Link>
-              <Link href="/predicciones">Predicciones</Link>
-              <Link href="/predicciones/grupos">Clasificados</Link>
-              <Link href="/predicciones/dieciseisavos">Eliminatorias</Link>
-              <Link href="/tabla">Tabla</Link>
-              <Link href="/calendario">Calendario</Link>
-              <Link href="/reglas">Reglas</Link>
-              <Link href="/admin">Admin</Link>
+              <NavLinks />
             </div>
           </nav>
         </header>
