@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CSSProperties, MouseEvent, useEffect, useState } from "react";
+import { CSSProperties, MouseEvent, useEffect, useRef, useState } from "react";
 
 type NavItem = {
   href: string;
@@ -47,6 +47,7 @@ function isActive(pathname: string, item: NavItem) {
 
 export function NavLinks() {
   const pathname = usePathname();
+  const predictionsMenuRef = useRef<HTMLDivElement>(null);
   const [pieces, setPieces] = useState<ConfettiPiece[]>([]);
   const [predictionsOpen, setPredictionsOpen] = useState(false);
 
@@ -55,6 +56,29 @@ export function NavLinks() {
     const timeout = window.setTimeout(() => setPieces([]), 900);
     return () => window.clearTimeout(timeout);
   }, [pieces]);
+
+  useEffect(() => {
+    if (!predictionsOpen) return;
+
+    function closeOnOutsideClick(event: globalThis.MouseEvent | TouchEvent) {
+      if (!predictionsMenuRef.current?.contains(event.target as Node)) {
+        setPredictionsOpen(false);
+      }
+    }
+
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setPredictionsOpen(false);
+    }
+
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    document.addEventListener("touchstart", closeOnOutsideClick);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("mousedown", closeOnOutsideClick);
+      document.removeEventListener("touchstart", closeOnOutsideClick);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [predictionsOpen]);
 
   function popConfetti(event: MouseEvent<HTMLAnchorElement>) {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -85,7 +109,7 @@ export function NavLinks() {
 
           if (item.href === "/predicciones") {
             return (
-              <div key={item.href} className="relative">
+              <div key={item.href} ref={predictionsMenuRef} className="relative">
                 <div
                   className={[
                     "group relative inline-flex items-center overflow-hidden rounded-full border shadow-sm transition-all duration-200",
