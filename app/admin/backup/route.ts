@@ -34,7 +34,7 @@ export async function GET() {
 
   const backup = {
     exportedAt: new Date().toISOString(),
-    app: "Polla Mundialista Familia Huertas & Páez",
+    app: "Polla Mundialista Familiar",
     version: 1,
     counts: {
       participants: participants.length,
@@ -67,7 +67,7 @@ export async function GET() {
     status: 200,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Content-Disposition": `attachment; filename="polla-huertas-paez-backup-${date}.json"`,
+      "Content-Disposition": `attachment; filename="polla-mundialista-familiar-backup-${date}.json"`,
       "Cache-Control": "no-store",
     },
   });

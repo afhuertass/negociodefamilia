@@ -1,0 +1,748 @@
+{
+  "exportedAt": "2026-06-12T00:39:33.739Z",
+  "participants": [
+    {
+      "id": "cmq9fk30v0000kz04luaql5ji",
+      "name": "AndresH",
+      "accessCode": "1234",
+      "createdAt": "2026-06-11T11:44:37.711Z",
+      "groupPredictions": [
+        {
+          "id": "cmq9ta7p2003tl504t0idxzyh",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8woscz0003i23bv1vdlhma",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2003vl504jhyf229r",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wos2v0000i23b38kq3xf6",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2003xl504zcoj9oki",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wosfh0004i23bcr5t7jxr",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2003zl5049vuvcge4",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wosmx0007i23bbv1ct25r",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p20041l504cyy5ksoe",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wospd0008i23bqg7ckcyy",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p20043l504ug4r7e98",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wosru0009i23beixtgd5v",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p20045l504ctvaez1z",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wot6m000fi23bg1frcot5",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p20047l5040zsod7ux",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wosz7000ci23bn2fiowbd",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p20049l5042nhibl9e",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wot93000gi23b92muw6mp",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004bl50418uzf4lh",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wote0000ii23bn0jsqyyd",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004dl5042e05zrh5",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wotiw000ki23b3fq6qhxm",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004fl50425hqamp6",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wotnt000mi23bjx2fehwo",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004hl504sa3ukm37",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wotsp000oi23bpd22qjfl",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004jl5043p8wb3i9",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wotxn000qi23bbjk9mn5z",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004ll504kfw2reqc",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wou2i000si23by8stjn8i",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004nl504zyjn39kl",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wou9w000vi23bpcuwn5ii",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004pl504qov5nq42",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8woucb000wi23bfmcu0trv",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004rl504q4l1odot",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8woujq000zi23bxod1cck0",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004tl504ov1mrgox",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8woum70010i23bjmpr0t3g",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004vl5049tknl0lk",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wour30012i23bgk2k3x8i",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p2004xl5040jdefdtd",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wov3b0017i23byake8pqr",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p3004zl504dzya6z32",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wouvy0014i23brs95hmpo",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p30051l504z1tmcc08",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wov870019i23btwpxim75",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p30053l5042l2oasof",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wov5r0018i23bncc5xllz",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9ta7p30055l504r9mk3pev",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wosai0002i23bh3kdjnvi",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9ta7p30057l5048ki1k296",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8woswr000bi23bp2jpureu",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9ta7p30059l5040alm4fgw",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wot45000ei23bfnjunrhg",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9ta7p3005bl504ig0d8sqy",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wotgg000ji23b51m8vgut",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9ta7p3005dl504zx7ug7gn",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wotld000li23bqbvn8gm3",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9ta7p3005fl504t1ak8kjb",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wou03000ri23bk6gj2jn7",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9ta7p3005hl504786lw0i1",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wou7g000ui23bwruzj2ta",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9ta7p3005jl5048whn0if3",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "teamId": "cmq8wouer000xi23ba46099bx",
+          "type": "BEST_THIRD"
+        }
+      ],
+      "matchPredictions": [
+        {
+          "id": "cmq9r3h3l0001l504q3ovg5xh",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "matchId": "cmq8wp14l0000i24g1rvdbxjc",
+          "homeGoals": 1,
+          "awayGoals": 1,
+          "qualifiedTeamId": "cmq8wospd0008i23bqg7ckcyy"
+        }
+      ],
+      "scores": [
+        {
+          "id": "cmq9qzqvu0007jr04vrq4fqxp",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "phase": "GROUP_STAGE",
+          "points": 0,
+          "exactScores": 0,
+          "qualifiedHits": 0
+        },
+        {
+          "id": "cmq9r06dc0009jo04oz7i8cn4",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "phase": "ROUND_OF_32",
+          "points": 0,
+          "exactScores": 0,
+          "qualifiedHits": 0
+        },
+        {
+          "id": "cmq9r06dk000bjo045zmh7ryj",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "phase": "ROUND_OF_16",
+          "points": 0,
+          "exactScores": 0,
+          "qualifiedHits": 0
+        },
+        {
+          "id": "cmq9r06ea000djo049frgegja",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "phase": "QUARTER_FINALS",
+          "points": 0,
+          "exactScores": 0,
+          "qualifiedHits": 0
+        },
+        {
+          "id": "cmq9r06ey000fjo04ytnv0o62",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "phase": "SEMI_FINALS",
+          "points": 0,
+          "exactScores": 0,
+          "qualifiedHits": 0
+        },
+        {
+          "id": "cmq9r06f6000hjo041mher5t1",
+          "participantId": "cmq9fk30v0000kz04luaql5ji",
+          "phase": "FINAL",
+          "points": 0,
+          "exactScores": 0,
+          "qualifiedHits": 0
+        }
+      ]
+    },
+    {
+      "id": "cmq9tfico0000jy04pphuqq59",
+      "name": "Iván",
+      "accessCode": "1616",
+      "createdAt": "2026-06-11T18:12:58.920Z",
+      "groupPredictions": [
+        {
+          "id": "cmq9th8i8001yjy04sydoydgg",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wos2v0000i23b38kq3xf6",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i80020jy04tichy0qw",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wosai0002i23bh3kdjnvi",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i80022jy049ws2833l",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wosfh0004i23bcr5t7jxr",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i80024jy045rpowxw9",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wosmx0007i23bbv1ct25r",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i80026jy042wbmuc83",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wospd0008i23bqg7ckcyy",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i80028jy049rajb9lp",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wosru0009i23beixtgd5v",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i8002ajy04a0ux6cje",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wot6m000fi23bg1frcot5",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002cjy04kh4q7xqm",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wosz7000ci23bn2fiowbd",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002ejy04bgtmbefe",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wotgg000ji23b51m8vgut",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002gjy04pvmffrsm",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wot93000gi23b92muw6mp",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002ijy04fjmrmjw8",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wotld000li23bqbvn8gm3",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002kjy04v2jvmvd2",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wotiw000ki23b3fq6qhxm",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002mjy043azyko54",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wotsp000oi23bpd22qjfl",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002ojy04hxqhsqgg",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wotv6000pi23bydamticm",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002qjy04q3xdfbt0",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wou2i000si23by8stjn8i",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002sjy04tokort1v",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wou9w000vi23bpcuwn5ii",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002ujy049iwnoxf8",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8woucb000wi23bfmcu0trv",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002wjy04ffczyq61",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wouer000xi23ba46099bx",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9002yjy04klj3fjjr",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8woum70010i23bjmpr0t3g",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i90030jy049s17fyl1",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wour30012i23bgk2k3x8i",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i90032jy04mfw9rzib",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wov3b0017i23byake8pqr",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i90034jy04vegbss0v",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wouvy0014i23brs95hmpo",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i90036jy04fe2m6y3b",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wov870019i23btwpxim75",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i90038jy04pejxpib5",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wov5r0018i23bncc5xllz",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9th8i9003ajy04imz3safb",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8woscz0003i23bv1vdlhma",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9th8i9003cjy04pdjy7ow7",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8woswr000bi23bp2jpureu",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9th8i9003ejy044x8sayuy",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wot45000ei23bfnjunrhg",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9th8i9003gjy044c59uaxu",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wote0000ii23bn0jsqyyd",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9th8i9003ijy04y04gva9o",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wotnt000mi23bjx2fehwo",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9th8i9003kjy0464th796m",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8woujq000zi23bxod1cck0",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9th8i9003mjy04og0nsuzh",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wouon0011i23b7tokt9i0",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9th8i9003ojy04aam14dt9",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "teamId": "cmq8wovan001ai23bb2p94ogv",
+          "type": "BEST_THIRD"
+        }
+      ],
+      "matchPredictions": [],
+      "scores": [
+        {
+          "id": "cmq9th47t001wjy04x95b5sv7",
+          "participantId": "cmq9tfico0000jy04pphuqq59",
+          "phase": "GROUP_STAGE",
+          "points": 0,
+          "exactScores": 0,
+          "qualifiedHits": 0
+        }
+      ]
+    },
+    {
+      "id": "cmq9vd1zj0000l204vaubtvt8",
+      "name": "Hector Huertas Daza",
+      "accessCode": "79449456",
+      "createdAt": "2026-06-11T19:07:03.631Z",
+      "groupPredictions": [
+        {
+          "id": "cmq9vmom00062l204yjc0x7ju",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wos2v0000i23b38kq3xf6",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom00064l20464ah36gh",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wos800001i23bh3k1k49q",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom00066l204x62dgscs",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8woshz0005i23b6xj20r8g",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom00068l204rxeop39o",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wosfh0004i23bcr5t7jxr",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom0006al204bdxkct5z",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wospd0008i23bqg7ckcyy",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom0006cl2049xbwrabj",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wosru0009i23beixtgd5v",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom0006el204y7kcjfk5",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wot1n000di23b0a1i11xy",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom0006gl204fhucm1fi",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wosz7000ci23bn2fiowbd",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1006il204ads3pclo",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wotgg000ji23b51m8vgut",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1006kl204h3yyixvs",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wot93000gi23b92muw6mp",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1006ml204dmu6ffmg",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wotiw000ki23b3fq6qhxm",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1006ol2044ydswp5v",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wotnt000mi23bjx2fehwo",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1006ql204wa56evk7",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wotsp000oi23bpd22qjfl",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1006sl204gfqdkz4c",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wotv6000pi23bydamticm",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1006ul204w8d6miv4",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wou2i000si23by8stjn8i",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1006wl204bnf5pc2q",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wou9w000vi23bpcuwn5ii",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1006yl204pnneu6mg",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8woucb000wi23bfmcu0trv",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom10070l204suy07z09",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8woujq000zi23bxod1cck0",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom10072l204tzamv6lt",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wouon0011i23b7tokt9i0",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom10074l20485pppfh1",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8woum70010i23bjmpr0t3g",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom10076l204s13w44rv",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wov3b0017i23byake8pqr",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom10078l2045r54pm0x",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wouvy0014i23brs95hmpo",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1007al204g17flkwt",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wov870019i23btwpxim75",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1007cl2047uek6n38",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wov5r0018i23bncc5xllz",
+          "type": "TOP_TWO"
+        },
+        {
+          "id": "cmq9vmom1007el204c40cbqka",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8woscz0003i23bv1vdlhma",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9vmom1007gl204ypjizydc",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wosmx0007i23bbv1ct25r",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9vmom1007il2045qjr7th2",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8woswr000bi23bp2jpureu",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9vmom1007kl204vrqphu8w",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wot45000ei23bfnjunrhg",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9vmom1007ml204i55sjse9",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wotq9000ni23batvltg03",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9vmom1007ol204cbcm0cfj",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wouer000xi23ba46099bx",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9vmom1007ql204hwrmyrmh",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8woutj0013i23b4lkeged2",
+          "type": "BEST_THIRD"
+        },
+        {
+          "id": "cmq9vmom1007sl204ccsjrijb",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "teamId": "cmq8wovd3001bi23bkty68swk",
+          "type": "BEST_THIRD"
+        }
+      ],
+      "matchPredictions": [],
+      "scores": [
+        {
+          "id": "cmq9vlgkh001xld04qdk2hysb",
+          "participantId": "cmq9vd1zj0000l204vaubtvt8",
+          "phase": "GROUP_STAGE",
+          "points": 0,
+          "exactScores": 0,
+          "qualifiedHits": 0
+        }
+      ]
+    },
+    {
+      "id": "cmq9vdvno0000l104k2da5b9d",
+      "name": "Nubia",
+      "accessCode": "0915",
+      "createdAt": "2026-06-11T19:07:42.085Z",
+      "groupPredictions": [
+        {
+          "id": "cmq9ztvze0001ju04ep7qndsg",
+          "participantId": "cmq9vdvno0000l104k2da5b9d",
+          "teamId": "cmq8wos2v0000i23b38kq3xf6",
+          "type": "TOP_TWO"
+        }
+      ],
+      "matchPredictions": [],
+      "scores": [
+        {
+          "id": "cmq9vlgkq001zld04qhh4foqq",
+          "participantId": "cmq9vdvno0000l104k2da5b9d",
+          "phase": "GROUP_STAGE",
+          "points": 0,
+          "exactScores": 0,
+          "qualifiedHits": 0
+        }
+      ]
+    },
+    {
+      "id": "cmq9vo8jm0081l204bs0amfft",
+      "name": "Silvino Huertas",
+      "accessCode": "4274796",
+      "createdAt": "2026-06-11T19:15:45.346Z",
+      "groupPredictions": [],
+      "matchPredictions": [],
+      "scores": [
+        {
+          "id": "cmq9ztw1c000bju0471epbzc1",
+          "participantId": "cmq9vo8jm0081l204bs0amfft",
+          "phase": "GROUP_STAGE",
+          "points": 0,
+          "exactScores": 0,
+          "qualifiedHits": 0
+        }
+      ]
+    },
+    {
+      "id": "cmq9w4e290080ld04bn3cgclh",
+      "name": "David Huertas",
+      "accessCode": "1014305398",
+      "createdAt": "2026-06-11T19:28:18.993Z",
+      "groupPredictions": [],
+      "matchPredictions": [],
+      "scores": [
+        {
+          "id": "cmq9ztw1j000dju043oehf5ih",
+          "participantId": "cmq9w4e290080ld04bn3cgclh",
+          "phase": "GROUP_STAGE",
+          "points": 0,
+          "exactScores": 0,
+          "qualifiedHits": 0
+        }
+      ]
+    }
+  ]
+}

@@ -18,7 +18,7 @@ export default function RulesPage() {
       <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 via-sky-700 to-indigo-800 p-8 text-white shadow-sm">
         <p className="text-sm font-black uppercase tracking-[0.3em] text-emerald-100">Reglamento oficial</p>
         <h1 className="mt-4 max-w-4xl text-4xl font-black tracking-tight md:text-6xl">
-          Polla Mundialista Familia Huertas & Páez
+          Polla Mundialista Familiar
         </h1>
         <p className="mt-4 max-w-3xl text-lg text-sky-50">
           Predicciones del Mundial 2026 por fases. Los puntos se acumulan durante todo el torneo y la tabla se actualiza después de cada cierre.
