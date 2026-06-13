@@ -2,6 +2,8 @@ import { Round } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import Link from "next/link";
 import { calculateGroupStandings, calculateBestThirds } from "@/lib/standings";
+import { getLastSyncTime, updateLastSyncTime } from "@/lib/sync-tracker";
+import { runBackgroundSync } from "@/lib/background-sync";
 
 const CALENDAR_TIME_ZONE = "America/Mexico_City";
 
@@ -34,6 +36,14 @@ export default async function CalendarPage({
 }) {
   const params = await searchParams;
   const currentTab = params.tab === "posiciones" ? "posiciones" : "partidos";
+
+  const lastSync = getLastSyncTime();
+  const COOLDOWN = 3 * 60 * 1000; // 3 minutes
+
+  if (Date.now() - lastSync > COOLDOWN) {
+    updateLastSyncTime();
+    void runBackgroundSync();
+  }
 
   const [teams, matches] = await Promise.all([
     prisma.team.findMany({ orderBy: [{ group: "asc" }, { name: "asc" }] }),
