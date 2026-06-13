@@ -22,7 +22,7 @@ function teamName(match: { homeTeam?: { name: string } | null; awayTeam?: { name
 
 export default async function Home() {
   const matches = await prisma.match.findMany({
-    include: { homeTeam: true, awayTeam: true },
+    include: { homeTeam: true, awayTeam: true, result: true },
     orderBy: [{ startsAt: "asc" }, { matchNumber: "asc" }],
   });
   const todayKey = dayFormatter.format(new Date());
@@ -63,7 +63,14 @@ export default async function Home() {
                     <span className="font-black text-emerald-700">Partido #{match.matchNumber}</span>
                     <span>{match.startsAt ? matchDateFormatter.format(match.startsAt) : "Hora por definir"}</span>
                   </div>
-                  <p className="mt-2 text-lg font-black">{teamName(match)}</p>
+                  <div className="mt-2 flex items-center justify-between gap-3">
+                    <p className="text-lg font-black">{teamName(match)}</p>
+                    {match.result ? (
+                      <span className={`rounded-full px-3 py-1 text-sm font-black ring-1 ${match.finished ? 'bg-emerald-100 text-emerald-800 ring-emerald-300' : 'bg-sky-100 text-sky-800 ring-sky-300 animate-pulse'}`}>
+                        {match.result.homeGoals} - {match.result.awayGoals} {!match.finished && "• En vivo"}
+                      </span>
+                    ) : null}
+                  </div>
                   {match.stadium ? <p className="mt-1 text-sm text-slate-600">{match.stadium}</p> : null}
                 </div>
               ))}

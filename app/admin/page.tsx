@@ -84,6 +84,89 @@ async function calculateAll() {
   redirect("/admin?scored=1");
 }
 
+async function fetchLiveResults() {
+  "use server";
+  if (!(await isAdmin())) redirect("/admin");
+
+  const response = await fetch("https://worldcup26.ir/get/games");
+  const data = await response.json();
+  
+  const games = Array.isArray(data) ? data : (data && Array.isArray(data.games) ? data.games : null);
+  
+  if (!games) {
+    console.error("API did not return an array or games array");
+    redirect("/admin?error=api-games");
+  }
+
+  const matches = await prisma.match.findMany({ include: { homeTeam: true, awayTeam: true } });
+  
+  for (const match of matches) {
+    const apiMatch = games.find((d: any) => {
+      if (match.homeTeam?.name && match.awayTeam?.name) {
+        const apiHome = String(d.home_team_name_en || d.home_team_label || "").trim().toLowerCase();
+        const apiAway = String(d.away_team_name_en || d.away_team_label || "").trim().toLowerCase();
+        const dbHome = String(match.homeTeam.name).trim().toLowerCase();
+        const dbAway = String(match.awayTeam.name).trim().toLowerCase();
+        if (apiHome === dbHome && apiAway === dbAway) return true;
+      }
+      return d.id === String(match.matchNumber);
+    });
+    
+    // Skip if no matching API game found or if the game hasn't started yet (i.e. has no partial scores)
+    if (!apiMatch || apiMatch.time_elapsed === "notstarted") continue;
+
+    const homeGoals = parseInt(apiMatch.home_score);
+    const awayGoals = parseInt(apiMatch.away_score);
+    
+    if (isNaN(homeGoals) || isNaN(awayGoals)) continue;
+
+    let qualifiedTeamId = "";
+    if (homeGoals > awayGoals) {
+      qualifiedTeamId = match.homeTeamId ?? "";
+    } else if (awayGoals > homeGoals) {
+      qualifiedTeamId = match.awayTeamId ?? "";
+    } else {
+      const winnerName = String(apiMatch.winner_team_name_en || "").trim().toLowerCase();
+      if (winnerName && match.homeTeam?.name && match.awayTeam?.name) {
+        if (winnerName === match.homeTeam.name.trim().toLowerCase()) {
+          qualifiedTeamId = match.homeTeamId ?? "";
+        } else if (winnerName === match.awayTeam.name.trim().toLowerCase()) {
+          qualifiedTeamId = match.awayTeamId ?? "";
+        }
+      }
+      if (!qualifiedTeamId) {
+        qualifiedTeamId = match.homeTeamId ?? "";
+      }
+    }
+
+    if (!qualifiedTeamId) continue;
+
+    await prisma.matchResult.upsert({
+      where: { matchId: match.id },
+      update: {
+        homeGoals,
+        awayGoals,
+        qualifiedTeamId
+      },
+      create: {
+        matchId: match.id,
+        homeGoals,
+        awayGoals,
+        qualifiedTeamId
+      }
+    });
+    
+    const isFinished = apiMatch.finished === "TRUE";
+    await prisma.match.update({
+      where: { id: match.id },
+      data: { finished: isFinished }
+    });
+  }
+  
+  await recalculateScores();
+  redirect("/admin?resultsFetched=1");
+}
+
 async function updateLocks(formData: FormData) {
   "use server";
   if (!(await isAdmin())) redirect("/admin");
@@ -94,7 +177,7 @@ async function updateLocks(formData: FormData) {
   redirect("/admin?locks=1");
 }
 
-export default async function AdminPage({ searchParams }: { searchParams: Promise<{ error?: string; scored?: string; cleared?: string; locks?: string; participantDeleted?: string }> }) {
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ error?: string; scored?: string; cleared?: string; locks?: string; participantDeleted?: string; resultsFetched?: string }> }) {
   const params = await searchParams;
   const admin = await isAdmin();
   if (!admin) {
@@ -128,6 +211,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           <h1 className="text-3xl font-black">Panel admin</h1>
           <p className="text-sm text-slate-600">Equipos, clasificados reales y cálculo de puntajes.</p>
           {params.scored && <p className="mt-2 text-sm font-semibold text-emerald-700">Resultados guardados y puntajes recalculados.</p>}
+          {params.resultsFetched && <p className="mt-2 text-sm font-semibold text-emerald-700">Resultados en vivo sincronizados y puntajes recalculados.</p>}
           {params.cleared && <p className="mt-2 text-sm font-semibold text-amber-700">Resultados reales limpiados.</p>}
           {params.locks && <p className="mt-2 text-sm font-semibold text-emerald-700">Bloqueos actualizados.</p>}
           {params.participantDeleted && <p className="mt-2 text-sm font-semibold text-emerald-700">Participante eliminado.</p>}
@@ -135,6 +219,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           {params.error === "participant-delete" && <p className="mt-2 text-sm font-semibold text-red-700">No se pudo eliminar el participante.</p>}
         </div>
         <div className="flex flex-wrap gap-2">
+          <form action={fetchLiveResults}><button className="btn bg-sky-600 hover:bg-sky-700 text-white font-bold px-4 py-2 rounded-xl shadow-sm transition hover:bg-sky-700">Fetch resultados en vivo</button></form>
           <Link href="/admin/partidos" className="btn-secondary">Resultados eliminatorias</Link>
           <a href="/admin/backup" className="btn-secondary">Descargar backup JSON</a>
           <form action={calculateAll}><button className="btn-secondary">Recalcular con resultados guardados</button></form>

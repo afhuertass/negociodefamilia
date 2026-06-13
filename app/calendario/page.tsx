@@ -30,7 +30,7 @@ export default async function CalendarPage() {
     prisma.team.findMany({ orderBy: [{ group: "asc" }, { name: "asc" }] }),
     prisma.match.findMany({
       where: { round: Round.GROUP_STAGE },
-      include: { homeTeam: true, awayTeam: true },
+      include: { homeTeam: true, awayTeam: true, result: true },
       orderBy: [{ matchNumber: "asc" }],
     }),
   ]);
@@ -43,7 +43,7 @@ export default async function CalendarPage() {
       <section className="card">
         <h1 className="text-3xl font-black">Grupos y calendario</h1>
         <p className="mt-2 text-sm text-slate-600">
-          Equipos y partidos cargados para la fase de grupos. Por ahora se incluyó lo que se pegó: grupos A-K y partidos A-J.
+          Equipos y partidos cargados para la fase de grupos.
         </p>
       </section>
 
@@ -64,7 +64,14 @@ export default async function CalendarPage() {
                   <span className="font-black text-emerald-700">Partido #{match.matchNumber}</span>
                   <span>{match.startsAt ? matchDateFormatter.format(match.startsAt) : "Hora por definir"}</span>
                 </div>
-                <p className="mt-2 text-lg font-black">{teamName(match)}</p>
+                <div className="mt-2 flex items-center justify-between gap-3">
+                  <p className="text-lg font-black">{teamName(match)}</p>
+                  {match.result ? (
+                    <span className={`rounded-full px-3 py-1 text-sm font-black ring-1 ${match.finished ? 'bg-emerald-100 text-emerald-800 ring-emerald-300' : 'bg-sky-100 text-sky-800 ring-sky-300 animate-pulse'}`}>
+                      {match.result.homeGoals} - {match.result.awayGoals} {!match.finished && "• En vivo"}
+                    </span>
+                  ) : null}
+                </div>
                 {match.stadium ? <p className="mt-1 text-sm text-slate-600">{match.stadium}</p> : null}
               </div>
             ))}
@@ -74,6 +81,40 @@ export default async function CalendarPage() {
             No hay partidos programados para hoy.
           </p>
         )}
+      </section>
+
+      <section className="card overflow-x-auto">
+        <h2 className="text-2xl font-black">Partidos fase de grupos</h2>
+        <table className="mt-4 w-full min-w-[760px] text-left text-sm">
+          <thead className="border-b bg-slate-50 text-slate-600">
+            <tr>
+              <th className="p-3">#</th>
+              <th className="p-3">Fecha</th>
+              <th className="p-3">Partido</th>
+              <th className="p-3">Resultado</th>
+              <th className="p-3">Estadio</th>
+            </tr>
+          </thead>
+          <tbody>
+            {matches.map((match) => (
+              <tr key={match.id} className="border-b last:border-0">
+                <td className="p-3 font-black">{match.matchNumber}</td>
+                <td className="p-3">{match.startsAt ? matchDateFormatter.format(match.startsAt) : "Por definir"}</td>
+                <td className="p-3 font-bold">{teamName(match)}</td>
+                <td className="p-3">
+                  {match.result ? (
+                    <span className={`rounded-full px-2.5 py-1 text-xs font-black ring-1 ${match.finished ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-sky-50 text-sky-700 ring-sky-200 animate-pulse'}`}>
+                      {match.result.homeGoals} - {match.result.awayGoals} {!match.finished && "• En vivo"}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-slate-400 font-semibold">—</span>
+                  )}
+                </td>
+                <td className="p-3 text-slate-600">{match.stadium}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </section>
 
       <section className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -87,30 +128,6 @@ export default async function CalendarPage() {
             </ul>
           </div>
         ))}
-      </section>
-
-      <section className="card overflow-x-auto">
-        <h2 className="text-2xl font-black">Partidos fase de grupos</h2>
-        <table className="mt-4 w-full min-w-[760px] text-left text-sm">
-          <thead className="border-b bg-slate-50 text-slate-600">
-            <tr>
-              <th className="p-3">#</th>
-              <th className="p-3">Fecha</th>
-              <th className="p-3">Partido</th>
-              <th className="p-3">Estadio</th>
-            </tr>
-          </thead>
-          <tbody>
-            {matches.map((match) => (
-              <tr key={match.id} className="border-b last:border-0">
-                <td className="p-3 font-black">{match.matchNumber}</td>
-                <td className="p-3">{match.startsAt ? matchDateFormatter.format(match.startsAt) : "Por definir"}</td>
-                <td className="p-3 font-bold">{teamName(match)}</td>
-                <td className="p-3 text-slate-600">{match.stadium}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </section>
     </div>
   );

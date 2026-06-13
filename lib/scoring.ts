@@ -30,7 +30,7 @@ export async function scoreGroupStage() {
 
 export async function scoreRound(round: Round) {
   const matches = await prisma.match.findMany({
-    where: { round, result: { isNot: null } },
+    where: { round, finished: true, result: { isNot: null } },
     include: { result: true, predictions: true },
   });
   const participants = await prisma.participant.findMany();
