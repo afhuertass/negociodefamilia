@@ -27,6 +27,7 @@ export default async function Home() {
   });
   const todayKey = dayFormatter.format(new Date());
   const todayMatches = matches.filter((match) => match.startsAt && dayFormatter.format(match.startsAt) === todayKey);
+  const finalizedMatches = matches.filter((match) => match.finished && match.result);
 
   return (
     <div className="grid gap-6 md:grid-cols-[1.4fr_1fr]">
@@ -83,13 +84,28 @@ export default async function Home() {
         </section>
 
         <section className="card">
-          <h2 className="text-2xl font-black">¿Cómo funciona?</h2>
-          <ol className="mt-4 space-y-3 text-sm text-slate-700">
-            <li><b>1.</b> Cada participante entra con nombre + código.</li>
-            <li><b>2.</b> Predice 24 clasificados de grupos y 8 mejores terceros.</li>
-            <li><b>3.</b> En eliminatorias predice marcador y equipo clasificado.</li>
-            <li><b>4.</b> El admin carga resultados y el sistema calcula puntos.</li>
-          </ol>
+          <h2 className="text-2xl font-black">Partidos finalizados</h2>
+          {finalizedMatches.length > 0 ? (
+            <div className="mt-4 space-y-2.5 max-h-[380px] overflow-y-auto pr-1">
+              {finalizedMatches.map((match) => (
+                <div key={match.id} className="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 bg-slate-50/50 p-3 text-sm transition hover:bg-slate-50">
+                  <div>
+                    <span className="font-bold text-slate-500 text-xs">Partido #{match.matchNumber}</span>
+                    <p className="font-bold text-slate-900">{teamName(match)}</p>
+                  </div>
+                  {match.result && (
+                    <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-black text-emerald-700 ring-1 ring-emerald-200">
+                      {match.result.homeGoals} - {match.result.awayGoals}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-4 rounded-2xl bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-600">
+              No hay partidos finalizados aún.
+            </p>
+          )}
         </section>
       </div>
     </div>
