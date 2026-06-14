@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Link from "next/link";
 import { NavLinks } from "@/app/components/NavLinks";
+import { SyncListener } from "@/app/components/SyncListener";
 import { prisma } from "@/lib/db";
 import { getParticipantId } from "@/lib/session";
 import "./globals.css";
@@ -29,6 +30,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="es" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full bg-slate-50 text-slate-950">
+        <SyncListener />
         <header className="sticky top-0 z-40 border-b border-emerald-100/70 bg-white/85 shadow-sm shadow-emerald-950/5 backdrop-blur-xl">
           <nav className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-3">
             <Link href="/" className="group inline-flex items-center gap-3 rounded-full p-1 pr-4 transition hover:bg-emerald-50">

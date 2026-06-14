@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { getPhaseLocks, phaseLabels, setPhaseLocked } from "@/lib/locks";
 import { isAdmin } from "@/lib/session";
 import { scoreGroupStage, scoreRound } from "@/lib/scoring";
+import { calculateGroupStandings, calculateBestThirds } from "@/lib/standings";
 
 async function loginAdmin(formData: FormData) {
   "use server";
@@ -80,6 +81,41 @@ async function recalculateScores() {
 async function calculateAll() {
   "use server";
   if (!(await isAdmin())) redirect("/admin");
+  await recalculateScores();
+  redirect("/admin?scored=1");
+}
+
+async function applyAllOfficial() {
+  "use server";
+  if (!(await isAdmin())) redirect("/admin");
+
+  const [teams, matches] = await prisma.$transaction([
+    prisma.team.findMany(),
+    prisma.match.findMany({
+      where: { round: Round.GROUP_STAGE },
+      include: { homeTeam: true, awayTeam: true, result: true },
+    }),
+  ]);
+
+  const standings = calculateGroupStandings(teams, matches as any);
+  const bestThirds = calculateBestThirds(standings);
+
+  const topTwoTeams: string[] = [];
+  for (const group of Object.keys(standings)) {
+    standings[group].slice(0, 2).forEach((t: any) => topTwoTeams.push(t.teamId));
+  }
+  const bestThirdTeams = bestThirds.slice(0, 8).map((t: any) => t.teamId);
+
+  await prisma.$transaction([
+    prisma.actualQualifiedTeam.deleteMany(),
+    ...topTwoTeams.map((teamId) =>
+      prisma.actualQualifiedTeam.create({ data: { teamId, type: PredictionType.TOP_TWO } }),
+    ),
+    ...bestThirdTeams.map((teamId) =>
+      prisma.actualQualifiedTeam.create({ data: { teamId, type: PredictionType.BEST_THIRD } }),
+    ),
+  ]);
+
   await recalculateScores();
   redirect("/admin?scored=1");
 }
@@ -219,6 +255,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           {params.error === "participant-delete" && <p className="mt-2 text-sm font-semibold text-red-700">No se pudo eliminar el participante.</p>}
         </div>
         <div className="flex flex-wrap gap-2">
+          <form action={applyAllOfficial}><button className="btn bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl shadow-sm transition hover:bg-emerald-700">Snapshot: Aplicar Clasificaciones</button></form>
+          <form action={clearQualified}><button className="btn bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-xl shadow-sm transition hover:bg-red-700">Snapshot: Eliminar Clasificaciones</button></form>
           <form action={fetchLiveResults}><button className="btn bg-sky-600 hover:bg-sky-700 text-white font-bold px-4 py-2 rounded-xl shadow-sm transition hover:bg-sky-700">Fetch resultados en vivo</button></form>
           <Link href="/admin/partidos" className="btn-secondary">Resultados eliminatorias</Link>
           <a href="/admin/backup" className="btn-secondary">Descargar backup JSON</a>
