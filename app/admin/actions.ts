@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { isAdmin } from "@/lib/session";
 import { scoreGroupStage, scoreRound } from "@/lib/scoring";
@@ -84,6 +85,7 @@ export async function fetchLiveResultsAction(_prevState: any, _formData: FormDat
     }
     
     await recalculateScores(prisma);
+    revalidatePath("/");
     return { success: true };
   } catch (error: any) {
     console.error("Error fetching live results:", error);
