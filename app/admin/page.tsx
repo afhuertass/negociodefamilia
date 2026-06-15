@@ -7,6 +7,7 @@ import { getPhaseLocks, phaseLabels, setPhaseLocked } from "@/lib/locks";
 import { isAdmin } from "@/lib/session";
 import { scoreGroupStage, scoreRound } from "@/lib/scoring";
 import { calculateGroupStandings, calculateBestThirds } from "@/lib/standings";
+import { FetchResultsButton } from "@/app/components/FetchResultsButton";
 
 async function loginAdmin(formData: FormData) {
   "use server";
@@ -120,89 +121,6 @@ async function applyAllOfficial() {
   redirect("/admin?scored=1");
 }
 
-async function fetchLiveResults() {
-  "use server";
-  if (!(await isAdmin())) redirect("/admin");
-
-  const response = await fetch("https://worldcup26.ir/get/games");
-  const data = await response.json();
-  
-  const games = Array.isArray(data) ? data : (data && Array.isArray(data.games) ? data.games : null);
-  
-  if (!games) {
-    console.error("API did not return an array or games array");
-    redirect("/admin?error=api-games");
-  }
-
-  const matches = await prisma.match.findMany({ include: { homeTeam: true, awayTeam: true } });
-  
-  for (const match of matches) {
-    const apiMatch = games.find((d: any) => {
-      if (match.homeTeam?.name && match.awayTeam?.name) {
-        const apiHome = String(d.home_team_name_en || d.home_team_label || "").trim().toLowerCase();
-        const apiAway = String(d.away_team_name_en || d.away_team_label || "").trim().toLowerCase();
-        const dbHome = String(match.homeTeam.name).trim().toLowerCase();
-        const dbAway = String(match.awayTeam.name).trim().toLowerCase();
-        if (apiHome === dbHome && apiAway === dbAway) return true;
-      }
-      return d.id === String(match.matchNumber);
-    });
-    
-    // Skip if no matching API game found or if the game hasn't started yet (i.e. has no partial scores)
-    if (!apiMatch || apiMatch.time_elapsed === "notstarted") continue;
-
-    const homeGoals = parseInt(apiMatch.home_score);
-    const awayGoals = parseInt(apiMatch.away_score);
-    
-    if (isNaN(homeGoals) || isNaN(awayGoals)) continue;
-
-    let qualifiedTeamId = "";
-    if (homeGoals > awayGoals) {
-      qualifiedTeamId = match.homeTeamId ?? "";
-    } else if (awayGoals > homeGoals) {
-      qualifiedTeamId = match.awayTeamId ?? "";
-    } else {
-      const winnerName = String(apiMatch.winner_team_name_en || "").trim().toLowerCase();
-      if (winnerName && match.homeTeam?.name && match.awayTeam?.name) {
-        if (winnerName === match.homeTeam.name.trim().toLowerCase()) {
-          qualifiedTeamId = match.homeTeamId ?? "";
-        } else if (winnerName === match.awayTeam.name.trim().toLowerCase()) {
-          qualifiedTeamId = match.awayTeamId ?? "";
-        }
-      }
-      if (!qualifiedTeamId) {
-        qualifiedTeamId = match.homeTeamId ?? "";
-      }
-    }
-
-    if (!qualifiedTeamId) continue;
-
-    await prisma.matchResult.upsert({
-      where: { matchId: match.id },
-      update: {
-        homeGoals,
-        awayGoals,
-        qualifiedTeamId
-      },
-      create: {
-        matchId: match.id,
-        homeGoals,
-        awayGoals,
-        qualifiedTeamId
-      }
-    });
-    
-    const isFinished = apiMatch.finished === "TRUE";
-    await prisma.match.update({
-      where: { id: match.id },
-      data: { finished: isFinished }
-    });
-  }
-  
-  await recalculateScores(prisma);
-  redirect("/admin?resultsFetched=1");
-}
-
 async function updateLocks(formData: FormData) {
   "use server";
   if (!(await isAdmin())) redirect("/admin");
@@ -257,7 +175,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         <div className="flex flex-wrap gap-2">
           <form action={applyAllOfficial}><button className="btn bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-xl shadow-sm transition hover:bg-emerald-700">Snapshot: Aplicar Clasificaciones</button></form>
           <form action={clearQualified}><button className="btn bg-red-600 hover:bg-red-700 text-white font-bold px-4 py-2 rounded-xl shadow-sm transition hover:bg-red-700">Snapshot: Eliminar Clasificaciones</button></form>
-          <form action={fetchLiveResults}><button className="btn bg-sky-600 hover:bg-sky-700 text-white font-bold px-4 py-2 rounded-xl shadow-sm transition hover:bg-sky-700">Fetch resultados en vivo</button></form>
+          <FetchResultsButton />
           <Link href="/admin/partidos" className="btn-secondary">Resultados eliminatorias</Link>
           <a href="/admin/backup" className="btn-secondary">Descargar backup JSON</a>
           <form action={calculateAll}><button className="btn-secondary">Recalcular con resultados guardados</button></form>

@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { getLastSyncTime, updateLastSyncTime } from "@/lib/sync-tracker";
-import { runBackgroundSync } from "@/lib/background-sync";
 
 const CALENDAR_TIME_ZONE = "America/Mexico_City";
 
@@ -23,14 +21,6 @@ function teamName(match: { homeTeam?: { name: string } | null; awayTeam?: { name
 }
 
 export default async function Home() {
-  const lastSync = getLastSyncTime();
-  const COOLDOWN = 3 * 60 * 1000; // 3 minutes
-
-  if (Date.now() - lastSync > COOLDOWN) {
-    updateLastSyncTime();
-    void runBackgroundSync();
-  }
-
   const matches = await prisma.match.findMany({
     include: { homeTeam: true, awayTeam: true, result: true },
     orderBy: [{ startsAt: "asc" }, { matchNumber: "asc" }],
