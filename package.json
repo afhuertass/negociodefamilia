@@ -9,7 +9,8 @@
     "lint": "eslint",
     "seed": "node prisma/seed.js",
     "seed:knockout": "node prisma/seed-knockout.js",
-    "check:scoring": "node scripts/check-scoring.mjs"
+    "check:scoring": "node scripts/check-scoring.mjs",
+    "test:integration": "npx prisma generate --schema=tests/test.schema.prisma && npx prisma db push --schema=tests/test.schema.prisma && npx tsx tests/integration/scoring.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
