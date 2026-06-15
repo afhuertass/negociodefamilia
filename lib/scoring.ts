@@ -4,15 +4,17 @@ import { scoreMatchPrediction } from "@/lib/scoringRules";
 
 export async function scoreGroupStage() {
   const actual = await prisma.actualQualifiedTeam.findMany();
-  const actualKeys = new Set(actual.map((a) => `${a.teamId}:${a.type}`));
+  const actualTeamIds = new Set(actual.map((a) => a.teamId));
   const participants = await prisma.participant.findMany({
     include: { groupPredictions: true },
   });
 
   for (const participant of participants) {
-    const points = participant.groupPredictions.filter((p) =>
-      actualKeys.has(`${p.teamId}:${p.type}`),
-    ).length;
+    const predictedTeamIds = new Set(participant.groupPredictions.map((p) => p.teamId));
+    let points = 0;
+    for (const teamId of predictedTeamIds) {
+      if (actualTeamIds.has(teamId)) points++;
+    }
 
     await prisma.score.upsert({
       where: { participantId_phase: { participantId: participant.id, phase: Round.GROUP_STAGE } },

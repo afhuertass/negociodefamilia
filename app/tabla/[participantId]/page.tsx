@@ -60,7 +60,7 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
   const qualifiedHits = participant.scores.reduce((sum, score) => sum + score.qualifiedHits, 0);
   const topTwo = participant.groupPredictions.filter((p) => p.type === PredictionType.TOP_TWO);
   const bestThird = participant.groupPredictions.filter((p) => p.type === PredictionType.BEST_THIRD);
-  const actualGroupKeys = new Set(actualQualifiedTeams.map((item) => `${item.teamId}:${item.type}`));
+  const actualGroupIds = new Set(actualQualifiedTeams.map((item) => item.teamId));
   const groupStagePoints = participant.scores.find((score) => score.phase === Round.GROUP_STAGE)?.points ?? 0;
 
   return (
@@ -87,7 +87,7 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
             <h3 className="font-black">1º / 2º de grupo ({topTwo.length}/24)</h3>
             <div className="mt-3 flex flex-wrap gap-2">
               {topTwo.map((p) => {
-                const hit = actualGroupKeys.has(`${p.teamId}:${p.type}`);
+                const hit = actualGroupIds.has(p.teamId);
                 return (
                   <span key={p.id} className={`rounded-full px-3 py-1 text-sm font-semibold ${hit ? "bg-emerald-50 text-emerald-800" : "bg-slate-100 text-slate-700"}`}>
                     {p.team.group} · {p.team.name} <b>{hit ? "+1" : "0"}</b>
@@ -101,7 +101,7 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
             <h3 className="font-black">Mejores terceros ({bestThird.length}/8)</h3>
             <div className="mt-3 flex flex-wrap gap-2">
               {bestThird.map((p) => {
-                const hit = actualGroupKeys.has(`${p.teamId}:${p.type}`);
+                const hit = actualGroupIds.has(p.teamId);
                 return (
                   <span key={p.id} className={`rounded-full px-3 py-1 text-sm font-semibold ${hit ? "bg-sky-50 text-sky-800" : "bg-slate-100 text-slate-700"}`}>
                     {p.team.group} · {p.team.name} <b>{hit ? "+1" : "0"}</b>

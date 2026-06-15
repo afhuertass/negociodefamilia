@@ -24,7 +24,7 @@ function scoreMatchPrediction(input) {
     return { points: 0, exactScoreHit: false, qualifiedHit, reason: 'no_hit' };
   }
 
-  if (exactScoreHit) return { points: 3, exactScoreHit: true, qualifiedHit, reason: 'exact_score' };
+  if (exactScoreHit && qualifiedHit) return { points: 3, exactScoreHit: true, qualifiedHit, reason: 'exact_score' };
   if (qualifiedHit) return { points: 1, exactScoreHit: false, qualifiedHit, reason: 'qualified_only' };
   return { points: 0, exactScoreHit: false, qualifiedHit, reason: 'no_hit' };
 }
@@ -33,6 +33,7 @@ const A = 'A';
 const B = 'B';
 const cases = [
   ['KO exact non-draw', 3, { round: Round.ROUND_OF_32, predictedHomeGoals: 2, predictedAwayGoals: 1, predictedQualifiedTeamId: A, actualHomeGoals: 2, actualAwayGoals: 1, actualQualifiedTeamId: A }],
+  ['KO exact score wrong team', 0, { round: Round.ROUND_OF_32, predictedHomeGoals: 2, predictedAwayGoals: 1, predictedQualifiedTeamId: B, actualHomeGoals: 2, actualAwayGoals: 1, actualQualifiedTeamId: A }],
   ['KO qualified only', 1, { round: Round.ROUND_OF_32, predictedHomeGoals: 1, predictedAwayGoals: 0, predictedQualifiedTeamId: A, actualHomeGoals: 3, actualAwayGoals: 1, actualQualifiedTeamId: A }],
   ['KO no hit', 0, { round: Round.ROUND_OF_32, predictedHomeGoals: 1, predictedAwayGoals: 0, predictedQualifiedTeamId: A, actualHomeGoals: 0, actualAwayGoals: 2, actualQualifiedTeamId: B }],
   ['KO predicted draw exact + qualified', 3, { round: Round.ROUND_OF_32, predictedHomeGoals: 1, predictedAwayGoals: 1, predictedQualifiedTeamId: A, actualHomeGoals: 1, actualAwayGoals: 1, actualQualifiedTeamId: A }],

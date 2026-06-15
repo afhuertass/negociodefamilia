@@ -54,7 +54,7 @@ export function scoreMatchPrediction(input: ScoreInput): MatchScoreBreakdown {
     return { points: 0, exactScoreHit: false, qualifiedHit, reason: "no_hit" };
   }
 
-  if (exactScoreHit) {
+  if (exactScoreHit && qualifiedHit) {
     return { points: 3, exactScoreHit: true, qualifiedHit, reason: "exact_score" };
   }
   if (qualifiedHit) {
