@@ -48,9 +48,6 @@ export function scoreMatchPrediction(input: ScoreInput): MatchScoreBreakdown {
     if (actualDraw) {
       return { points: 1, exactScoreHit: false, qualifiedHit, reason: "draw_only" };
     }
-    if (qualifiedHit) {
-      return { points: 1, exactScoreHit: false, qualifiedHit, reason: "qualified_only" };
-    }
     return { points: 0, exactScoreHit: false, qualifiedHit, reason: "no_hit" };
   }
 

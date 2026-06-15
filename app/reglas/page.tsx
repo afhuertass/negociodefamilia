@@ -8,7 +8,6 @@ const drawRows = [
   ["Marcador exacto de empate + clasificado correcto", "3 puntos"],
   ["Empate correcto + clasificado correcto", "2 puntos"],
   ["Solo empate correcto", "1 punto"],
-  ["Solo clasificado correcto", "1 punto"],
   ["Sin aciertos", "0 puntos"],
 ];
 
@@ -38,8 +37,8 @@ export default function RulesPage() {
         </div>
         <div className="card">
           <p className="text-sm font-bold uppercase text-slate-500">Premios</p>
-          <h2 className="mt-1 text-2xl font-black">80% / 20%</h2>
-          <p className="mt-2 text-sm text-slate-600">Primer y segundo lugar.</p>
+          <h2 className="mt-1 text-2xl font-black">65% / 25% / 10%</h2>
+          <p className="mt-2 text-sm text-slate-600">Primer, segundo y tercer lugar.</p>
         </div>
       </section>
 
@@ -125,11 +124,15 @@ export default function RulesPage() {
           <div className="mt-5 space-y-3">
             <div className="rounded-2xl bg-yellow-50 p-4">
               <p className="text-lg font-black">🥇 Primer lugar</p>
-              <p className="text-3xl font-black text-yellow-700">80%</p>
+              <p className="text-3xl font-black text-yellow-700">65%</p>
             </div>
             <div className="rounded-2xl bg-slate-100 p-4">
               <p className="text-lg font-black">🥈 Segundo lugar</p>
-              <p className="text-3xl font-black text-slate-700">20%</p>
+              <p className="text-3xl font-black text-slate-700">25%</p>
+            </div>
+            <div className="rounded-2xl bg-orange-100 p-4">
+              <p className="text-lg font-black">🥉 Tercer lugar</p>
+              <p className="text-3xl font-black text-orange-700">10%</p>
             </div>
           </div>
         </div>

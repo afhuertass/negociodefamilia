@@ -59,7 +59,7 @@ async function saveQualified(formData: FormData) {
     ),
   ]);
 
-  await recalculateScores();
+  await recalculateScores(prisma);
   redirect("/admin?scored=1");
 }
 
@@ -67,21 +67,21 @@ async function clearQualified() {
   "use server";
   if (!(await isAdmin())) redirect("/admin");
   await prisma.actualQualifiedTeam.deleteMany();
-  await scoreGroupStage();
+  await scoreGroupStage(prisma);
   redirect("/admin?cleared=1");
 }
 
 async function recalculateScores() {
-  await scoreGroupStage();
+  await scoreGroupStage(prisma);
   for (const round of [Round.ROUND_OF_32, Round.ROUND_OF_16, Round.QUARTER_FINALS, Round.SEMI_FINALS, Round.FINAL]) {
-    await scoreRound(round);
+    await scoreRound(prisma, round);
   }
 }
 
 async function calculateAll() {
   "use server";
   if (!(await isAdmin())) redirect("/admin");
-  await recalculateScores();
+  await recalculateScores(prisma);
   redirect("/admin?scored=1");
 }
 
@@ -116,7 +116,7 @@ async function applyAllOfficial() {
     ),
   ]);
 
-  await recalculateScores();
+  await recalculateScores(prisma);
   redirect("/admin?scored=1");
 }
 
@@ -199,7 +199,7 @@ async function fetchLiveResults() {
     });
   }
   
-  await recalculateScores();
+  await recalculateScores(prisma);
   redirect("/admin?resultsFetched=1");
 }
 

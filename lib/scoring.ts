@@ -1,8 +1,8 @@
 import { Round } from "@prisma/client";
-import { prisma } from "@/lib/db";
+import { PrismaClient } from "@prisma/client";
 import { scoreMatchPrediction } from "@/lib/scoringRules";
 
-export async function scoreGroupStage() {
+export async function scoreGroupStage(prisma: PrismaClient) {
   const actual = await prisma.actualQualifiedTeam.findMany();
   const actualTeamIds = new Set(actual.map((a) => a.teamId));
   const participants = await prisma.participant.findMany({
@@ -30,7 +30,7 @@ export async function scoreGroupStage() {
   }
 }
 
-export async function scoreRound(round: Round) {
+export async function scoreRound(prisma: PrismaClient, round: Round) {
   const matches = await prisma.match.findMany({
     where: { round, finished: true, result: { isNot: null } },
     include: { result: true, predictions: true },

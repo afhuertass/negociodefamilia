@@ -88,7 +88,7 @@ Rules differ based on the phase:
 *   **If a draw was predicted:**
     *   **3 points:** Exact score draw (e.g. 1-1 predicted, 1-1 actual) AND correct qualified team (who advances on penalties).
     *   **2 points:** Score was a draw, but not exact (e.g. 1-1 predicted, 2-2 actual) AND correct qualified team.
-    *   **1 point:** Score was a draw, but incorrect qualified team OR incorrect draw score but correct qualified team.
+    *   **1 point:** Score was a draw, but incorrect qualified team.
 
 ### Phase 3: The Final (`FINAL`)
 *   **5 points:** Exact score hit AND correct champion.
@@ -140,7 +140,22 @@ Admin triggers live fetching in `/admin`.
 
 ## 7. Critical Agent Instructions & Troubleshooting
 
+### ⚠️ SAFETY PROTOCOL: DATABASE OPERATIONS (TIER 3)
+To prevent catastrophic data loss, all agents MUST follow these rules:
+
+1.  **Isolation Verification:** Before running any script, the agent MUST inspect the environment to confirm it is NOT pointing to production.
+2.  **Destructive Protection:** Any script performing `deleteMany`, `drop`, or `truncate` must contain a circuit breaker check:
+    ```typescript
+    if (process.env.DATABASE_URL?.includes('neon')) {
+      console.error("❌ DANGER: Production database detected. Aborting.");
+      process.exit(1);
+    }
+    ```
+3.  **Mandatory Ask:** If the agent needs to perform a database operation that touches more than one row, the agent MUST explicitly ask the user for confirmation: *"I intend to run [script] on [database connection]. Please confirm this is a test database."*
+4.  **No Exceptions:** These rules apply to all tools, including bash scripts and direct node execution.
+
 ### Avoid the "Deleted Function" Trap
+...
 *   Do NOT overwrite core helper functions such as `recalculateScores()` when implementing newer features.
 *   Always read the full file first to make sure your `edit` replacement targets only the specific blocks intended.
 

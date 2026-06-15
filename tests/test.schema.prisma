@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/@prisma/test-client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./test.db"
+}
+
+enum Round {
+  GROUP_STAGE
+  ROUND_OF_32
+  ROUND_OF_16
+  QUARTER_FINALS
+  SEMI_FINALS
+  FINAL
+}
+
+enum PredictionType {
+  TOP_TWO
+  BEST_THIRD
+}
+
+model Participant {
+  id               String            @id @default(cuid())
+  name             String            @unique
+  accessCode       String
+  createdAt        DateTime          @default(now())
+  groupPredictions GroupPrediction[]
+  matchPredictions MatchPrediction[]
+  scores           Score[]
+}
+
+model Team {
+  id                    String            @id @default(cuid())
+  name                  String            @unique
+  group                 String?
+  groupPredictions      GroupPrediction[]
+  homeMatches           Match[]           @relation("HomeTeam")
+  awayMatches           Match[]           @relation("AwayTeam")
+  qualifiedResults      MatchResult[]
+  qualifiedPredictions  MatchPrediction[]
+  actualQualifications  ActualQualifiedTeam[]
+}
+
+model Match {
+  id          String             @id @default(cuid())
+  matchNumber Int?               @unique
+  round       Round
+  homeTeamId  String?
+  awayTeamId  String?
+  homeSlot    String?
+  awaySlot    String?
+  startsAt    DateTime?
+  stadium     String?
+  locked      Boolean            @default(false)
+  finished    Boolean            @default(false)
+  homeTeam    Team?              @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam    Team?              @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  result      MatchResult?
+  predictions MatchPrediction[]
+}
+
+model MatchResult {
+  id              String @id @default(cuid())
+  matchId         String @unique
+  homeGoals       Int
+  awayGoals       Int
+  qualifiedTeamId String
+  match           Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  qualifiedTeam   Team   @relation(fields: [qualifiedTeamId], references: [id])
+}
+
+model GroupPrediction {
+  id            String         @id @default(cuid())
+  participantId String
+  teamId        String
+  type          PredictionType
+  participant   Participant    @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  team          Team           @relation(fields: [teamId], references: [id])
+
+  @@unique([participantId, teamId, type])
+}
+
+model MatchPrediction {
+  id              String      @id @default(cuid())
+  participantId   String
+  matchId         String
+  homeGoals       Int
+  awayGoals       Int
+  qualifiedTeamId String
+  participant     Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  match           Match       @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  qualifiedTeam   Team        @relation(fields: [qualifiedTeamId], references: [id])
+
+  @@unique([participantId, matchId])
+}
+
+model Score {
+  id              String      @id @default(cuid())
+  participantId   String
+  phase           Round
+  points          Int         @default(0)
+  exactScores     Int         @default(0)
+  qualifiedHits   Int         @default(0)
+  participant     Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([participantId, phase])
+}
+
+model PhaseLock {
+  id        String   @id @default(cuid())
+  phase     Round    @unique
+  isLocked  Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+}
+
+model ActualQualifiedTeam {
+  id     String         @id @default(cuid())
+  teamId String
+  type   PredictionType
+  team   Team           @relation(fields: [teamId], references: [id])
+
+  @@unique([teamId, type])
+}
