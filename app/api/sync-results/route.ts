@@ -3,10 +3,10 @@ import { prisma } from "@/lib/db";
 import { scoreGroupStage, scoreRound } from "@/lib/scoring";
 import { Round } from "@prisma/client";
 
-async function recalculateScores() {
-  await scoreGroupStage();
+async function recalculateScores(prismaClient: typeof prisma) {
+  await scoreGroupStage(prismaClient);
   for (const round of [Round.ROUND_OF_32, Round.ROUND_OF_16, Round.QUARTER_FINALS, Round.SEMI_FINALS, Round.FINAL]) {
-    await scoreRound(round);
+    await scoreRound(prismaClient, round);
   }
 }
 
@@ -86,7 +86,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (updatedCount > 0) {
-      await recalculateScores();
+      await recalculateScores(prisma);
     }
 
     return NextResponse.json({ success: true, updated: updatedCount });

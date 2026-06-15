@@ -71,10 +71,10 @@ async function clearQualified() {
   redirect("/admin?cleared=1");
 }
 
-async function recalculateScores() {
-  await scoreGroupStage(prisma);
+async function recalculateScores(prismaClient: typeof prisma) {
+  await scoreGroupStage(prismaClient);
   for (const round of [Round.ROUND_OF_32, Round.ROUND_OF_16, Round.QUARTER_FINALS, Round.SEMI_FINALS, Round.FINAL]) {
-    await scoreRound(prisma, round);
+    await scoreRound(prismaClient, round);
   }
 }
 

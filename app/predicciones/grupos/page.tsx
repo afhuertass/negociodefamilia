@@ -29,7 +29,7 @@ async function saveGroupPredictions(formData: FormData) {
     ),
   ]);
 
-  await scoreGroupStage();
+  await scoreGroupStage(prisma);
 
   redirect("/predicciones/grupos?ok=1");
 }

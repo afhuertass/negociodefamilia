@@ -71,7 +71,7 @@ async function saveResult(formData: FormData) {
     create: { matchId, homeGoals, awayGoals, qualifiedTeamId },
   });
   await prisma.match.update({ where: { id: matchId }, data: { finished: true, locked: true } });
-  await scoreRound(round);
+  await scoreRound(prisma, round);
   redirect("/admin/partidos");
 }
 

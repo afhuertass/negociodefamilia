@@ -71,9 +71,9 @@ export async function runBackgroundSync() {
     }
 
     if (updated) {
-      await scoreGroupStage();
+      await scoreGroupStage(prisma);
       for (const round of [Round.ROUND_OF_32, Round.ROUND_OF_16, Round.QUARTER_FINALS, Round.SEMI_FINALS, Round.FINAL]) {
-        await scoreRound(round);
+        await scoreRound(prisma, round);
       }
       console.log("Background Sync: Pool scores updated successfully.");
     }

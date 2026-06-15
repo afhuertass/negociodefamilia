@@ -1,16 +1,15 @@
 import { Round } from "@prisma/client";
-import { PrismaClient } from "@prisma/client";
 import { scoreMatchPrediction } from "@/lib/scoringRules";
 
-export async function scoreGroupStage(prisma: PrismaClient) {
+export async function scoreGroupStage(prisma: any) {
   const actual = await prisma.actualQualifiedTeam.findMany();
-  const actualTeamIds = new Set(actual.map((a) => a.teamId));
+  const actualTeamIds = new Set(actual.map((a: any) => a.teamId));
   const participants = await prisma.participant.findMany({
     include: { groupPredictions: true },
   });
 
   for (const participant of participants) {
-    const predictedTeamIds = new Set(participant.groupPredictions.map((p) => p.teamId));
+    const predictedTeamIds = new Set(participant.groupPredictions.map((p: any) => p.teamId));
     let points = 0;
     for (const teamId of predictedTeamIds) {
       if (actualTeamIds.has(teamId)) points++;
@@ -30,7 +29,7 @@ export async function scoreGroupStage(prisma: PrismaClient) {
   }
 }
 
-export async function scoreRound(prisma: PrismaClient, round: Round) {
+export async function scoreRound(prisma: any, round: Round) {
   const matches = await prisma.match.findMany({
     where: { round, finished: true, result: { isNot: null } },
     include: { result: true, predictions: true },
@@ -45,7 +44,7 @@ export async function scoreRound(prisma: PrismaClient, round: Round) {
     for (const match of matches) {
       const result = match.result;
       if (!result) continue;
-      const prediction = match.predictions.find((p) => p.participantId === participant.id);
+      const prediction = match.predictions.find((p: any) => p.participantId === participant.id);
       if (!prediction) continue;
 
       const breakdown = scoreMatchPrediction({
