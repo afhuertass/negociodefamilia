@@ -26,11 +26,7 @@ export function SyncListener() {
         const { lastSync } = await res.json();
 
         if (lastSyncRef.current !== 0 && lastSync > lastSyncRef.current) {
-          toast.info("¡Resultados actualizados!", {
-            description: "Hay nuevos puntajes disponibles.",
-            action: { label: "Refrescar", onClick: () => router.refresh() },
-            duration: 10000,
-          });
+          // Toast removed as requested
         }
         lastSyncRef.current = lastSync;
       } catch (e) {
