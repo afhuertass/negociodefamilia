@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { phaseLabels } from "@/lib/locks";
 import { scoreMatchPrediction } from "@/lib/scoringRules";
+import Avatar from "@/app/components/Avatar";
 
 const roundOrder = [
   Round.GROUP_STAGE,
@@ -56,7 +57,6 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
   if (!participant) notFound();
 
   const totalPoints = participant.scores.reduce((sum, score) => sum + score.points, 0);
-  const exactScores = participant.scores.reduce((sum, score) => sum + score.exactScores, 0);
   const qualifiedHits = participant.scores.reduce((sum, score) => sum + score.qualifiedHits, 0);
   const topTwo = participant.groupPredictions.filter((p) => p.type === PredictionType.TOP_TWO);
   const bestThird = participant.groupPredictions.filter((p) => p.type === PredictionType.BEST_THIRD);
@@ -67,10 +67,12 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
     <div className="space-y-6">
       <section className="card">
         <Link className="text-sm font-bold text-emerald-700 hover:underline" href="/tabla">← Volver a la tabla</Link>
-        <h1 className="mt-3 text-3xl font-black">Predicciones de {participant.name}</h1>
-        <div className="mt-5 grid gap-3 md:grid-cols-3">
+        <div className="mt-3 flex items-center gap-4">
+          <Avatar participantId={participant.id} name={participant.name} />
+          <h1 className="text-3xl font-black">Predicciones de {participant.name}</h1>
+        </div>
+        <div className="mt-5 grid gap-3 md:grid-cols-2">
           <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs font-bold uppercase text-slate-500">Puntos</p><p className="text-3xl font-black">{totalPoints}</p></div>
-          <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs font-bold uppercase text-slate-500">Exactos</p><p className="text-3xl font-black">{exactScores}</p></div>
           <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs font-bold uppercase text-slate-500">Clasificados</p><p className="text-3xl font-black">{qualifiedHits}</p></div>
         </div>
       </section>

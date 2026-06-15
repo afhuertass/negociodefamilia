@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
+import Avatar from "@/app/components/Avatar";
 
 const podiumStyles = [
   {
@@ -22,16 +23,6 @@ const podiumStyles = [
   },
 ];
 
-function initials(name: string) {
-  const compact = name.replace(/([a-záéíóúñ])([A-ZÁÉÍÓÚÑ])/g, "$1 $2");
-  return compact
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
-    .join("");
-}
-
 function rankBadge(index: number) {
   if (index === 0) return "bg-amber-100 text-amber-800 ring-amber-200";
   if (index === 1) return "bg-slate-100 text-slate-700 ring-slate-200";
@@ -50,11 +41,10 @@ export default async function LeaderboardPage() {
       id: p.id,
       name: p.name,
       points: p.scores.reduce((sum, s) => sum + s.points, 0),
-      exactScores: p.scores.reduce((sum, s) => sum + s.exactScores, 0),
       qualifiedHits: p.scores.reduce((sum, s) => sum + s.qualifiedHits, 0),
     }))
     .sort((a, b) =>
-      b.points - a.points || b.exactScores - a.exactScores || b.qualifiedHits - a.qualifiedHits || a.name.localeCompare(b.name),
+      b.points - a.points || b.qualifiedHits - a.qualifiedHits || a.name.localeCompare(b.name),
     );
 
   const leader = rows[0];
@@ -106,7 +96,6 @@ export default async function LeaderboardPage() {
                     <p className="mt-1 text-sm font-bold opacity-80">puntos</p>
                   </div>
                   <div className="text-right text-sm font-bold opacity-80">
-                    <p>{row.exactScores} exactos</p>
                     <p>{row.qualifiedHits} clasificados</p>
                   </div>
                 </div>
@@ -152,7 +141,6 @@ export default async function LeaderboardPage() {
                 <th className="px-5 py-4">Posición</th>
                 <th className="px-5 py-4">Participante</th>
                 <th className="px-5 py-4 text-right">Puntos</th>
-                <th className="px-5 py-4 text-right">Exactos</th>
                 <th className="px-5 py-4 text-right">Clasificados</th>
                 <th className="px-5 py-4">Progreso</th>
               </tr>
@@ -169,9 +157,7 @@ export default async function LeaderboardPage() {
                     </td>
                     <td className="border-t border-slate-100 px-5 py-4">
                       <Link className="flex items-center gap-3" href={`/tabla/${row.id}`}>
-                        <span className="grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-sky-600 text-xs font-black text-white shadow-sm shadow-emerald-500/20">
-                          {initials(row.name)}
-                        </span>
+                        <Avatar participantId={row.id} name={row.name} />
                         <span>
                           <span className="block font-black text-slate-900 group-hover:text-emerald-800">{row.name}</span>
                           <span className="text-xs font-semibold text-slate-500">Ver detalle →</span>
@@ -179,7 +165,6 @@ export default async function LeaderboardPage() {
                       </Link>
                     </td>
                     <td className="border-t border-slate-100 px-5 py-4 text-right text-2xl font-black text-emerald-700">{row.points}</td>
-                    <td className="border-t border-slate-100 px-5 py-4 text-right font-bold text-slate-700">{row.exactScores}</td>
                     <td className="border-t border-slate-100 px-5 py-4 text-right font-bold text-slate-700">{row.qualifiedHits}</td>
                     <td className="border-t border-slate-100 px-5 py-4">
                       <div className="h-2.5 overflow-hidden rounded-full bg-slate-100">
@@ -194,7 +179,7 @@ export default async function LeaderboardPage() {
                 );
               })}
               {rows.length === 0 && (
-                <tr><td className="p-6 text-slate-500" colSpan={6}>Aún no hay participantes.</td></tr>
+                <tr><td className="p-6 text-slate-500" colSpan={5}>Aún no hay participantes.</td></tr>
               )}
             </tbody>
           </table>
