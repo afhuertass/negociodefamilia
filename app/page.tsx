@@ -27,7 +27,9 @@ export default async function Home() {
   });
   const todayKey = dayFormatter.format(new Date());
   const todayMatches = matches.filter((match) => match.startsAt && dayFormatter.format(match.startsAt) === todayKey);
-  const finalizedMatches = matches.filter((match) => match.finished && match.result);
+  const finalizedMatches = matches
+    .filter((match) => match.finished && match.result)
+    .sort((a, b) => (b.startsAt?.getTime() ?? 0) - (a.startsAt?.getTime() ?? 0));
 
   return (
     <div className="grid gap-6 md:grid-cols-[1.4fr_1fr]">
