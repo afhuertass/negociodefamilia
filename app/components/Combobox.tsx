@@ -30,9 +30,16 @@ export default function Combobox({ options, onSelect }: { options: { name: strin
         placeholder="Escribe tu nombre..."
         value={selectedName || searchTerm}
         onChange={(e) => {
-          setSearchTerm(e.target.value);
+          const value = e.target.value;
+          setSearchTerm(value);
           setSelectedName("");
-          onSelect("");
+          
+          // Check if the typed value matches a valid participant name (case-insensitive)
+          const isValid = options.some(
+            (o) => o.name.toLowerCase() === value.toLowerCase()
+          );
+          onSelect(isValid ? value : "");
+          
           setIsOpen(true);
         }}
         onFocus={() => setIsOpen(true)}
