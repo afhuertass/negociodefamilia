@@ -36,7 +36,10 @@ export default function EntrarForm({
           required
         />
       </label>
-      <button className="btn w-full" disabled={!isValid}>
+      <button 
+        className="btn w-full disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-emerald-400" 
+        disabled={!isValid}
+      >
         Continuar
       </button>
     </form>
