@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import Combobox from "@/app/components/Combobox";
 
 async function enter(formData: FormData) {
   "use server";
@@ -31,12 +32,7 @@ export default async function EnterPage({ searchParams }: { searchParams: Promis
       {error && <p className="mt-4 rounded-xl bg-red-50 p-3 text-sm font-semibold text-red-700">Código incorrecto para ese nombre.</p>}
       <form action={enter} className="mt-6 space-y-4">
         <label className="block text-sm font-bold">Nombre
-          <select className="input mt-1" name="name" required>
-            <option value="">Selecciona tu nombre</option>
-            {participants.map((p) => (
-              <option key={p.name} value={p.name}>{p.name}</option>
-            ))}
-          </select>
+          <Combobox options={participants} />
         </label>
         <label className="block text-sm font-bold">Código
           <input className="input mt-1" name="accessCode" placeholder="Ej: 1234" required />
