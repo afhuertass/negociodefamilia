@@ -41,3 +41,5 @@ yarn-error.log*
 next-env.d.ts
 tests/test.db
 tests/test.db-journal
+
+docs/*
