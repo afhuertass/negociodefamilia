@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 
-export default function Combobox({ options }: { options: { name: string }[] }) {
+export default function Combobox({ options, onSelect }: { options: { name: string }[], onSelect: (name: string) => void }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [selectedName, setSelectedName] = useState("");
@@ -31,7 +31,8 @@ export default function Combobox({ options }: { options: { name: string }[] }) {
         value={selectedName || searchTerm}
         onChange={(e) => {
           setSearchTerm(e.target.value);
-          setSelectedName(""); // Clear selection when typing
+          setSelectedName("");
+          onSelect("");
           setIsOpen(true);
         }}
         onFocus={() => setIsOpen(true)}
@@ -50,6 +51,7 @@ export default function Combobox({ options }: { options: { name: string }[] }) {
                 onClick={() => {
                   setSelectedName(option.name);
                   setSearchTerm(option.name);
+                  onSelect(option.name);
                   setIsOpen(false);
                 }}
               >
