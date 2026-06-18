@@ -61,6 +61,8 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
   const topTwo = participant.groupPredictions.filter((p) => p.type === PredictionType.TOP_TWO);
   const bestThird = participant.groupPredictions.filter((p) => p.type === PredictionType.BEST_THIRD);
   const actualGroupIds = new Set(actualQualifiedTeams.map((item) => item.teamId));
+  const topTwoHits = topTwo.filter((p) => actualGroupIds.has(p.teamId)).length;
+  const bestThirdHits = bestThird.filter((p) => actualGroupIds.has(p.teamId)).length;
   const groupStagePoints = participant.scores.find((score) => score.phase === Round.GROUP_STAGE)?.points ?? 0;
 
   return (
@@ -86,7 +88,7 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
         </div>
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           <div className="rounded-2xl border p-4">
-            <h3 className="font-black">1º / 2º de grupo ({topTwo.length})</h3>
+            <h3 className="font-black">1º / 2º de grupo ({topTwoHits}/24)</h3>
             <div className="mt-3 flex flex-wrap gap-2">
               {topTwo.map((p) => {
                 const hit = actualGroupIds.has(p.teamId);
@@ -100,7 +102,7 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
             </div>
           </div>
           <div className="rounded-2xl border p-4">
-            <h3 className="font-black">Mejores terceros ({bestThird.length})</h3>
+            <h3 className="font-black">Mejores terceros ({bestThirdHits}/8)</h3>
             <div className="mt-3 flex flex-wrap gap-2">
               {bestThird.map((p) => {
                 const hit = actualGroupIds.has(p.teamId);
