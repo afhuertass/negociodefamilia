@@ -40,10 +40,10 @@ export default async function CalendarPage({
   const lastSync = getLastSyncTime();
   const COOLDOWN = 3 * 60 * 1000; // 3 minutes
 
-  if (Date.now() - lastSync > COOLDOWN) {
-    updateLastSyncTime();
-    void runBackgroundSync();
-  }
+  // if (Date.now() - lastSync > COOLDOWN) {
+  //   updateLastSyncTime();
+  //   void runBackgroundSync();
+  // }
 
   const [teams, matches] = await Promise.all([
     prisma.team.findMany({ orderBy: [{ group: "asc" }, { name: "asc" }] }),
@@ -138,6 +138,7 @@ export default async function CalendarPage({
               <thead className="border-b bg-slate-50 text-slate-600">
                 <tr>
                   <th className="p-3">#</th>
+                  <th className="p-3">ID</th>
                   <th className="p-3">Fecha</th>
                   <th className="p-3">Partido</th>
                   <th className="p-3">Resultado</th>
@@ -148,6 +149,7 @@ export default async function CalendarPage({
                 {matches.map((match) => (
                   <tr key={match.id} className="border-b last:border-0">
                     <td className="p-3 font-black">{match.matchNumber}</td>
+                    <td className="p-3 text-xs font-mono">{match.id}</td>
                     <td className="p-3">{match.startsAt ? matchDateFormatter.format(match.startsAt) : "Por definir"}</td>
                     <td className="p-3 font-bold">{teamName(match)}</td>
                     <td className="p-3">
