@@ -1,9 +1,9 @@
 import { Round } from "@prisma/client";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { isPhaseLocked } from "@/lib/locks";
-import { getParticipantId } from "@/lib/session";
+import { normalizeParticipantName } from "./resolveParticipant";
+import NameSelector from "@/app/components/NameSelector";
 
 const rounds: Record<string, Round> = {
   dieciseisavos: Round.ROUND_OF_32,
@@ -54,13 +54,14 @@ function completionStatus({
 
 async function savePredictions(formData: FormData) {
   "use server";
-  const participantId = await getParticipantId();
-  if (!participantId) redirect("/entrar");
+  const participantId = String(formData.get("participantId") || "");
+  const participant = await prisma.participant.findUnique({ where: { id: participantId } });
+  if (!participant) redirect("/");
   const roundSlug = String(formData.get("roundSlug"));
   const round = rounds[roundSlug];
   if (!round) redirect("/");
 
-  if (await isPhaseLocked(round)) redirect(`/predicciones/${roundSlug}?error=locked`);
+  if (await isPhaseLocked(round)) redirect(`/predicciones/${roundSlug}?error=locked&participante=${encodeURIComponent(participant.name)}`);
 
   const matches = await prisma.match.findMany({ where: { round }, include: { homeTeam: true, awayTeam: true } });
   for (const match of matches) {
@@ -76,25 +77,30 @@ async function savePredictions(formData: FormData) {
       create: { participantId, matchId: match.id, homeGoals, awayGoals, qualifiedTeamId },
     });
   }
-  redirect(`/predicciones/${roundSlug}?ok=1`);
+  redirect(`/predicciones/${roundSlug}?ok=1&participante=${encodeURIComponent(participant.name)}`);
 }
 
-export default async function RoundPredictionsPage({ params, searchParams }: { params: Promise<{ round: string }>; searchParams: Promise<{ ok?: string; error?: string }> }) {
-  const participantId = await getParticipantId();
-  if (!participantId) {
+export default async function RoundPredictionsPage({ params, searchParams }: { params: Promise<{ round: string }>; searchParams: Promise<{ ok?: string; error?: string; participante?: string }> }) {
+  const [{ round: slug }, { ok, error, participante }] = await Promise.all([params, searchParams]);
+  const round = rounds[slug];
+  if (!round) redirect("/");
+
+  const rawName = normalizeParticipantName(participante);
+  const participant = rawName ? await prisma.participant.findUnique({ where: { name: rawName } }) : null;
+
+  if (!participant) {
+    const participants = await prisma.participant.findMany({ select: { name: true }, orderBy: { name: "asc" } });
     return (
       <div className="mx-auto max-w-lg card">
         <h1 className="text-3xl font-black">Predicciones eliminatorias</h1>
         <p className="mt-3 text-sm text-slate-600">
-          Para llenar predicciones primero debes entrar con tu nombre y código.
+          Selecciona tu nombre para ver y guardar tus predicciones de {roundTitles[slug]}.
         </p>
-        <Link className="btn mt-5" href="/entrar">Entrar</Link>
+        <NameSelector participants={participants} slug={slug} />
       </div>
     );
   }
-  const [{ round: slug }, { ok, error }] = await Promise.all([params, searchParams]);
-  const round = rounds[slug];
-  if (!round) redirect("/");
+  const participantId = participant.id;
 
   const [matches, predictions, phaseLocked] = await Promise.all([
     prisma.match.findMany({ where: { round }, include: { homeTeam: true, awayTeam: true }, orderBy: { startsAt: "asc" } }),
@@ -126,6 +132,7 @@ export default async function RoundPredictionsPage({ params, searchParams }: { p
       {matches.length === 0 ? <p className="card text-sm text-slate-600">Aún no hay partidos cargados para esta ronda.</p> : (
         <form action={savePredictions} className="space-y-6">
           <input type="hidden" name="roundSlug" value={slug} />
+          <input type="hidden" name="participantId" value={participantId} />
 
           {!phaseLocked && (
             <div className="sticky top-24 z-20 flex flex-wrap items-center justify-between gap-3 rounded-3xl border border-emerald-100 bg-white/95 p-4 shadow-sm backdrop-blur">
