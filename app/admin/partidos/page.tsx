@@ -51,6 +51,15 @@ async function clearResult(formData: FormData) {
   redirect("/admin/partidos");
 }
 
+async function setMatchLocked(formData: FormData) {
+  "use server";
+  if (!(await isAdmin())) redirect("/admin");
+  const matchId = String(formData.get("matchId"));
+  const locked = formData.get("locked") === "true";
+  await prisma.match.update({ where: { id: matchId }, data: { locked } });
+  redirect("/admin/partidos");
+}
+
 async function saveResult(formData: FormData) {
   "use server";
   if (!(await isAdmin())) redirect("/admin");
