@@ -167,9 +167,14 @@ export default async function AdminMatchesPage({ searchParams }: { searchParams:
                         <h3 className="text-lg font-black">{homeLabel} vs {awayLabel}</h3>
                         {match.stadium && <p className="mt-1 text-xs text-slate-500">{match.startsAt?.toLocaleString("es", { dateStyle: "medium", timeStyle: "short" })} · {match.stadium}</p>}
                       </div>
-                      <span className={`rounded-full px-3 py-1 text-xs font-bold ${match.result ? "bg-emerald-100 text-emerald-700" : teamsReady ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"}`}>
-                        {match.result ? "Resultado cargado" : teamsReady ? "Listo para resultado" : "Falta asignar equipos"}
-                      </span>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className={`rounded-full px-3 py-1 text-xs font-bold ${match.result ? "bg-emerald-100 text-emerald-700" : teamsReady ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"}`}>
+                          {match.result ? "Resultado cargado" : teamsReady ? "Listo para resultado" : "Falta asignar equipos"}
+                        </span>
+                        {match.locked && (
+                          <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">Predicciones bloqueadas</span>
+                        )}
+                      </div>
                     </div>
 
                     <form action={assignTeams} className="mt-4 grid gap-3 md:grid-cols-[1fr_1fr_auto]">
@@ -221,6 +226,21 @@ export default async function AdminMatchesPage({ searchParams }: { searchParams:
                         </button>
                       </form>
                     )}
+
+                    <form action={setMatchLocked} className="mt-3 text-right">
+                      <input type="hidden" name="matchId" value={match.id} />
+                      <input type="hidden" name="locked" value={match.locked ? "false" : "true"} />
+                      <button
+                        type="submit"
+                        className={`rounded-xl border px-3 py-2 text-xs font-bold ${
+                          match.locked
+                            ? "border-amber-300 text-amber-700 hover:bg-amber-50"
+                            : "border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+                        }`}
+                      >
+                        {match.locked ? "Desbloquear predicciones" : "Bloquear predicciones"}
+                      </button>
+                    </form>
                   </div>
                 );
               })}
