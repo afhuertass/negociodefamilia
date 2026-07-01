@@ -72,10 +72,10 @@ async function testDrawScenario() {
     where: { participantId_phase: { participantId: participant.id, phase: Round.ROUND_OF_16 } },
   });
 
-  if (score?.points === 2) {
-    console.log("✅ PASS: Draw scenario (2 points)");
+  if (score?.points === 1) {
+    console.log("✅ PASS: Draw-inexact-qualified scenario (1 point under additive rules)");
   } else {
-    console.error(`❌ FAIL: Draw scenario (Expected 2 points, Got ${score?.points})`);
+    console.error(`❌ FAIL: Draw-inexact-qualified (Expected 1 point, Got ${score?.points})`);
   }
 }
 
@@ -144,10 +144,10 @@ async function testFailedDrawScenario() {
     where: { participantId_phase: { participantId: participant.id, phase: Round.ROUND_OF_16 } },
   });
 
-  if (score?.points === 0) {
-    console.log("✅ PASS: Failed Draw scenario (0 points)");
+  if (score?.points === 1) {
+    console.log("✅ PASS: Failed-draw-but-qualified scenario (1 point under additive rules)");
   } else {
-    console.error(`❌ FAIL: Failed Draw scenario (Expected 0 points, Got ${score?.points})`);
+    console.error(`❌ FAIL: Failed-draw-but-qualified (Expected 1 point, Got ${score?.points})`);
   }
 }
 

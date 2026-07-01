@@ -62,7 +62,7 @@ export default async function LeaderboardPage() {
             <p className="text-sm font-black uppercase tracking-[0.3em] text-emerald-100">Ranking familiar</p>
             <h1 className="mt-3 text-4xl font-black tracking-tight md:text-6xl">Tabla de posiciones</h1>
             <p className="mt-3 max-w-2xl text-sm font-medium text-sky-50 md:text-base">
-              Mira quién va arriba, desempates por marcadores exactos y aciertos de clasificados.
+              Mira quién va arriba, desempates por aciertos de clasificados.
             </p>
           </div>
           <div className="rounded-3xl border border-white/20 bg-white/15 p-4 text-right backdrop-blur">
