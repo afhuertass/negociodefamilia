@@ -22,7 +22,6 @@ type ConfettiPiece = {
 };
 
 const navItems: NavItem[] = [
-  { href: "/entrar", label: "Entrar", icon: "👋", match: "startsWith" },
   { href: "/predicciones", label: "Predicciones", icon: "🎯", match: "startsWith" },
   { href: "/tabla", label: "Tabla", icon: "📊", match: "startsWith" },
   { href: "/calendario", label: "Calendario", icon: "🗓️", match: "startsWith" },
