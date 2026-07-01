@@ -21,41 +21,16 @@ export function scoreMatchPrediction(input: ScoreInput): MatchScoreBreakdown {
   const exactScoreHit =
     input.predictedHomeGoals === input.actualHomeGoals &&
     input.predictedAwayGoals === input.actualAwayGoals;
-  const predictedDraw = input.predictedHomeGoals === input.predictedAwayGoals;
-  const actualDraw = input.actualHomeGoals === input.actualAwayGoals;
   const qualifiedHit = input.predictedQualifiedTeamId === input.actualQualifiedTeamId;
+  const isFinal = input.round === Round.FINAL;
+  const scoreWeight = exactScoreHit ? (isFinal ? 5 : 2) : 0;
+  const qualWeight = qualifiedHit ? (isFinal ? 3 : 1) : 0;
 
-  if (input.round === Round.FINAL) {
-    if (exactScoreHit && qualifiedHit) {
-      return { points: 5, exactScoreHit: true, qualifiedHit, reason: "final_exact_score_and_champion" };
-    }
-    if (qualifiedHit) {
-      return { points: 3, exactScoreHit: false, qualifiedHit, reason: "final_champion" };
-    }
-    if (predictedDraw && actualDraw) {
-      return { points: 1, exactScoreHit: false, qualifiedHit, reason: "final_draw_only" };
-    }
-    return { points: 0, exactScoreHit: false, qualifiedHit, reason: "no_hit" };
-  }
+  let reason: string;
+  if (exactScoreHit && qualifiedHit) reason = "exact_and_qualified";
+  else if (exactScoreHit) reason = "exact_only";
+  else if (qualifiedHit) reason = "qualified_only";
+  else reason = "no_hit";
 
-  if (predictedDraw) {
-    if (exactScoreHit && qualifiedHit) {
-      return { points: 3, exactScoreHit: true, qualifiedHit, reason: "draw_exact_score_and_qualified" };
-    }
-    if (actualDraw && qualifiedHit) {
-      return { points: 2, exactScoreHit: false, qualifiedHit, reason: "draw_and_qualified" };
-    }
-    if (actualDraw) {
-      return { points: 1, exactScoreHit: false, qualifiedHit, reason: "draw_only" };
-    }
-    return { points: 0, exactScoreHit: false, qualifiedHit, reason: "no_hit" };
-  }
-
-  if (exactScoreHit && qualifiedHit) {
-    return { points: 3, exactScoreHit: true, qualifiedHit, reason: "exact_score" };
-  }
-  if (qualifiedHit) {
-    return { points: 1, exactScoreHit: false, qualifiedHit, reason: "qualified_only" };
-  }
-  return { points: 0, exactScoreHit: false, qualifiedHit, reason: "no_hit" };
+  return { points: scoreWeight + qualWeight, exactScoreHit, qualifiedHit, reason };
 }
