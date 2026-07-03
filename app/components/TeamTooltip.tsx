@@ -63,7 +63,7 @@ export function TeamTooltip({
         {children}
       </span>
       {open && (
-        <span className="absolute bottom-full left-1/2 z-50 mb-2 w-72 -translate-x-1/2 rounded-2xl border border-slate-200 bg-white p-3 text-xs shadow-xl">
+        <span className="absolute bottom-full left-0 z-50 mb-2 w-72 rounded-2xl border border-slate-200 bg-white p-3 text-xs shadow-xl">
           <span className="block font-black text-slate-800 mb-2">
             Partidos de {teamName}
           </span>
