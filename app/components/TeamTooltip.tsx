@@ -71,9 +71,15 @@ export function TeamTooltip({
             const label = m.matchNumber
               ? `#${m.matchNumber} ${roundLabels[m.round] || m.round}`
               : roundLabels[m.round] || m.round;
+            const homeDisplay = m.homeTeamName === teamName
+              ? <b>{m.homeTeamName}</b>
+              : m.homeTeamName;
+            const awayDisplay = m.awayTeamName === teamName
+              ? <b>{m.awayTeamName}</b>
+              : m.awayTeamName;
             const score = m.result
-              ? `${m.homeTeamName} ${m.result.homeGoals} - ${m.result.awayGoals} ${m.awayTeamName}`
-              : `${m.homeTeamName} vs ${m.awayTeamName}`;
+              ? <>{homeDisplay} {m.result.homeGoals} - {m.result.awayGoals} {awayDisplay}</>
+              : <>{homeDisplay} vs {awayDisplay}</>;
             return (
               <span
                 key={i}
