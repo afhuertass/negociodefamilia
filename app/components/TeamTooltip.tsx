@@ -59,7 +59,7 @@ export function TeamTooltip({
       onMouseLeave={() => setOpen(false)}
       onClick={() => setOpen((v) => !v)}
     >
-      <span className="cursor-help underline decoration-dotted decoration-slate-300 underline-offset-2">
+      <span className="cursor-help font-bold text-emerald-700 underline decoration-emerald-300 underline-offset-2 hover:text-emerald-900 transition-colors">
         {children}
       </span>
       {open && (
