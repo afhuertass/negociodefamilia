@@ -5,6 +5,7 @@ import { prisma } from "@/lib/db";
 import { phaseLabels } from "@/lib/locks";
 import { scoreMatchPrediction } from "@/lib/scoringRules";
 import Avatar from "@/app/components/Avatar";
+import { TeamTooltip } from "@/app/components/TeamTooltip";
 
 const roundOrder = [
   Round.GROUP_STAGE,
@@ -14,13 +15,6 @@ const roundOrder = [
   Round.SEMI_FINALS,
   Round.FINAL,
 ];
-
-function matchLabel(prediction: NonNullable<Awaited<ReturnType<typeof getParticipantData>>>["matchPredictions"][number]) {
-  const match = prediction.match;
-  const home = match.homeTeam?.name || match.homeSlot || "Por definir";
-  const away = match.awayTeam?.name || match.awaySlot || "Por definir";
-  return `#${match.matchNumber ?? ""} · ${home} vs ${away}`;
-}
 
 async function getParticipantData(participantId: string) {
   return prisma.participant.findUnique({
@@ -55,6 +49,56 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
     prisma.actualQualifiedTeam.findMany(),
   ]);
   if (!participant) notFound();
+
+  // Collect all team IDs shown on this page (group picks + knockout match teams).
+  const teamIds = new Set<string>();
+  for (const gp of participant.groupPredictions) teamIds.add(gp.teamId);
+  for (const mp of participant.matchPredictions) {
+    if (mp.match.homeTeamId) teamIds.add(mp.match.homeTeamId);
+    if (mp.match.awayTeamId) teamIds.add(mp.match.awayTeamId);
+  }
+
+  const teamMatches = teamIds.size > 0
+    ? await prisma.match.findMany({
+        where: {
+          finished: true,
+          OR: [
+            { homeTeamId: { in: Array.from(teamIds) } },
+            { awayTeamId: { in: Array.from(teamIds) } },
+          ],
+        },
+        include: { homeTeam: true, awayTeam: true, result: true },
+        orderBy: { startsAt: "asc" },
+      })
+    : [];
+
+  type MatchEntry = {
+    matchNumber: number | null; round: string; startsAt: string | null;
+    stadium: string | null; homeTeamName: string; awayTeamName: string;
+    result: { homeGoals: number; awayGoals: number } | null;
+  };
+  const teamHistory = new Map<string, MatchEntry[]>();
+  for (const m of teamMatches) {
+    const entry: MatchEntry = {
+      matchNumber: m.matchNumber,
+      round: m.round,
+      startsAt: m.startsAt?.toISOString() ?? null,
+      stadium: m.stadium,
+      homeTeamName: m.homeTeam?.name ?? "",
+      awayTeamName: m.awayTeam?.name ?? "",
+      result: m.result ? { homeGoals: m.result.homeGoals, awayGoals: m.result.awayGoals } : null,
+    };
+    if (m.homeTeamId) {
+      const arr = teamHistory.get(m.homeTeamId) ?? [];
+      arr.push(entry);
+      teamHistory.set(m.homeTeamId, arr);
+    }
+    if (m.awayTeamId) {
+      const arr = teamHistory.get(m.awayTeamId) ?? [];
+      arr.push(entry);
+      teamHistory.set(m.awayTeamId, arr);
+    }
+  }
 
   const totalPoints = participant.scores.reduce((sum, score) => sum + score.points, 0);
   const qualifiedHits = participant.scores.reduce((sum, score) => sum + score.qualifiedHits, 0);
@@ -94,7 +138,9 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
                 const hit = actualGroupIds.has(p.teamId);
                 return (
                   <span key={p.id} className={`rounded-full px-3 py-1 text-sm font-semibold ${hit ? "bg-emerald-50 text-emerald-800" : "bg-slate-100 text-slate-700"}`}>
-                    {p.team.group} · {p.team.name} <b>{hit ? "+1" : "0"}</b>
+                    <TeamTooltip teamName={p.team.name} history={teamHistory.get(p.teamId) ?? []}>
+                      {p.team.group} · {p.team.name}
+                    </TeamTooltip> <b>{hit ? "+1" : "0"}</b>
                   </span>
                 );
               })}
@@ -108,7 +154,9 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
                 const hit = actualGroupIds.has(p.teamId);
                 return (
                   <span key={p.id} className={`rounded-full px-3 py-1 text-sm font-semibold ${hit ? "bg-sky-50 text-sky-800" : "bg-slate-100 text-slate-700"}`}>
-                    {p.team.group} · {p.team.name} <b>{hit ? "+1" : "0"}</b>
+                    <TeamTooltip teamName={p.team.name} history={teamHistory.get(p.teamId) ?? []}>
+                      {p.team.group} · {p.team.name}
+                    </TeamTooltip> <b>{hit ? "+1" : "0"}</b>
                   </span>
                 );
               })}
@@ -151,7 +199,29 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
 
                     return (
                       <tr key={prediction.id} className="border-b last:border-0">
-                        <td className="p-3 font-semibold">{matchLabel(prediction)}</td>
+                        <td className="p-3 font-semibold">
+                          {(() => {
+                            const match = prediction.match;
+                            const home = match.homeTeam?.name || match.homeSlot || "Por definir";
+                            const away = match.awayTeam?.name || match.awaySlot || "Por definir";
+                            return (
+                              <>
+                                #{match.matchNumber ?? ""} · {" "}
+                                {match.homeTeamId ? (
+                                  <TeamTooltip teamName={home} history={teamHistory.get(match.homeTeamId) ?? []}>
+                                    {home}
+                                  </TeamTooltip>
+                                ) : home}
+                                {" vs "}
+                                {match.awayTeamId ? (
+                                  <TeamTooltip teamName={away} history={teamHistory.get(match.awayTeamId) ?? []}>
+                                    {away}
+                                  </TeamTooltip>
+                                ) : away}
+                              </>
+                            );
+                          })()}
+                        </td>
                         <td className="p-3 font-black">{prediction.homeGoals} - {prediction.awayGoals}</td>
                         <td className="p-3">{prediction.qualifiedTeam.name}</td>
                         <td className="p-3 text-slate-600">
