@@ -68,24 +68,19 @@ export function TeamTooltip({
             Partidos de {teamName}
           </span>
           {history.map((m, i) => {
-            const isHome = m.homeTeamName === teamName;
-            const opponent = isHome ? m.awayTeamName : m.homeTeamName;
-            const score = m.result
-              ? `${m.result.homeGoals} - ${m.result.awayGoals}`
-              : "Pendiente";
             const label = m.matchNumber
               ? `#${m.matchNumber} ${roundLabels[m.round] || m.round}`
               : roundLabels[m.round] || m.round;
+            const score = m.result
+              ? `${m.homeTeamName} ${m.result.homeGoals} - ${m.result.awayGoals} ${m.awayTeamName}`
+              : `${m.homeTeamName} vs ${m.awayTeamName}`;
             return (
               <span
                 key={i}
                 className="flex items-center justify-between gap-2 py-1 border-b border-slate-100 last:border-0"
               >
-                <span className="text-slate-500 truncate">{label}</span>
-                <span className="text-slate-700 truncate">
-                  {isHome ? "vs" : "@"} {opponent}
-                </span>
-                <span className="font-bold text-slate-900 whitespace-nowrap">
+                <span className="text-slate-500 shrink-0">{label}</span>
+                <span className="font-bold text-slate-900 text-right">
                   {score}
                 </span>
               </span>
