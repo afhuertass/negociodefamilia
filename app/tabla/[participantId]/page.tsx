@@ -6,6 +6,7 @@ import { phaseLabels } from "@/lib/locks";
 import { scoreMatchPrediction } from "@/lib/scoringRules";
 import Avatar from "@/app/components/Avatar";
 import { TeamTooltip } from "@/app/components/TeamTooltip";
+import { MatchPredictionRow } from "@/app/components/MatchPredictionRow";
 
 const roundOrder = [
   Round.GROUP_STAGE,
@@ -100,6 +101,49 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
     }
   }
 
+  // Load ALL participants' predictions for every knockout match on this page.
+  const allMatchPredictionsRaw = participant.matchPredictions.length > 0
+    ? await prisma.matchPrediction.findMany({
+        where: {
+          matchId: { in: participant.matchPredictions.map((mp) => mp.matchId) },
+        },
+        include: { participant: true, qualifiedTeam: true, match: { include: { result: true } } },
+        orderBy: [{ match: { matchNumber: "asc" } }, { participant: { name: "asc" } }],
+      })
+    : [];
+
+  // Pre-compute points for each prediction (avoids importing scoringRules in client).
+  const allPredictionsByMatch = new Map<string, {
+    participantId: string; participantName: string;
+    homeGoals: number; awayGoals: number; qualifiedTeamName: string; points: number | null;
+  }[]>();
+  for (const mp of allMatchPredictionsRaw) {
+    const mpRound = mp.match.round;
+    const mpResult = mp.match.result;
+    const pts = mpResult
+      ? scoreMatchPrediction({
+          round: mpRound,
+          predictedHomeGoals: mp.homeGoals,
+          predictedAwayGoals: mp.awayGoals,
+          predictedQualifiedTeamId: mp.qualifiedTeamId,
+          actualHomeGoals: mpResult.homeGoals,
+          actualAwayGoals: mpResult.awayGoals,
+          actualQualifiedTeamId: mpResult.qualifiedTeamId,
+        }).points
+      : null;
+    const entry = {
+      participantId: mp.participantId,
+      participantName: mp.participant.name,
+      homeGoals: mp.homeGoals,
+      awayGoals: mp.awayGoals,
+      qualifiedTeamName: mp.qualifiedTeam.name,
+      points: pts,
+    };
+    const arr = allPredictionsByMatch.get(mp.matchId) ?? [];
+    arr.push(entry);
+    allPredictionsByMatch.set(mp.matchId, arr);
+  }
+
   const totalPoints = participant.scores.reduce((sum, score) => sum + score.points, 0);
   const qualifiedHits = participant.scores.reduce((sum, score) => sum + score.qualifiedHits, 0);
   const topTwo = participant.groupPredictions.filter((p) => p.type === PredictionType.TOP_TWO);
@@ -180,11 +224,13 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
                     <th className="p-3">Clasifica</th>
                     <th className="p-3">Resultado real</th>
                     <th className="p-3 text-right">Puntos</th>
+                    <th className="p-3 w-10"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {predictions.map((prediction) => {
-                    const result = prediction.match.result;
+                    const match = prediction.match;
+                    const result = match.result;
                     const awarded = result
                       ? scoreMatchPrediction({
                           round,
@@ -196,43 +242,23 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
                           actualQualifiedTeamId: result.qualifiedTeamId,
                         }).points
                       : null;
+                    const homeId = match.homeTeamId;
+                    const awayId = match.awayTeamId;
+                    const homeHistory = homeId ? teamHistory.get(homeId) ?? [] : [];
+                    const awayHistory = awayId ? teamHistory.get(awayId) ?? [] : [];
+                    const combinedHistory = [...homeHistory, ...awayHistory].filter(
+                      (v, i, a) => a.findIndex((x) => x.matchNumber === v.matchNumber) === i
+                    );
 
                     return (
-                      <tr key={prediction.id} className="border-b last:border-0">
-                        <td className="p-3 font-semibold">
-                          {(() => {
-                            const match = prediction.match;
-                            const home = match.homeTeam?.name || match.homeSlot || "Por definir";
-                            const away = match.awayTeam?.name || match.awaySlot || "Por definir";
-                            return (
-                              <>
-                                #{match.matchNumber ?? ""} · {" "}
-                                {match.homeTeamId ? (
-                                  <TeamTooltip teamName={home} history={teamHistory.get(match.homeTeamId) ?? []}>
-                                    {home}
-                                  </TeamTooltip>
-                                ) : home}
-                                {" vs "}
-                                {match.awayTeamId ? (
-                                  <TeamTooltip teamName={away} history={teamHistory.get(match.awayTeamId) ?? []}>
-                                    {away}
-                                  </TeamTooltip>
-                                ) : away}
-                              </>
-                            );
-                          })()}
-                        </td>
-                        <td className="p-3 font-black">{prediction.homeGoals} - {prediction.awayGoals}</td>
-                        <td className="p-3">{prediction.qualifiedTeam.name}</td>
-                        <td className="p-3 text-slate-600">
-                          {result
-                            ? `${result.homeGoals} - ${result.awayGoals}, clasifica ${result.qualifiedTeam.name}`
-                            : "Pendiente"}
-                        </td>
-                        <td className="p-3 text-right font-black text-emerald-700">
-                          {awarded === null ? "—" : awarded}
-                        </td>
-                      </tr>
+                      <MatchPredictionRow
+                        key={prediction.id}
+                        prediction={prediction}
+                        allPredictions={allPredictionsByMatch.get(prediction.matchId) ?? []}
+                        teamHistory={combinedHistory}
+                        currentParticipantId={participant.id}
+                        awarded={awarded}
+                      />
                     );
                   })}
                 </tbody>
