@@ -264,6 +264,16 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
                 </tbody>
               </table>
             )}
+            {(() => {
+              const roundScore = participant.scores.find((s) => s.phase === round);
+              if (!roundScore) return null;
+              return (
+                <div className="mt-4 flex flex-wrap gap-4 border-t border-slate-100 pt-4 text-sm">
+                  <span className="font-bold text-slate-700">Total ronda: <span className="text-emerald-700">{roundScore.points} pts</span></span>
+                  <span className="text-slate-500">{roundScore.exactScores} exactos</span>
+                </div>
+              );
+            })()}
           </section>
         );
       })}
