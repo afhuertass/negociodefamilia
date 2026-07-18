@@ -34,6 +34,7 @@ const knockoutItems: NavItem[] = [
   { href: "/predicciones/octavos", label: "Octavos", icon: "🎯", match: "startsWith" },
   { href: "/predicciones/cuartos", label: "Cuartos", icon: "🏟️", match: "startsWith" },
   { href: "/predicciones/semifinales", label: "Semifinales", icon: "🔥", match: "startsWith" },
+  { href: "/predicciones/tercerpuesto", label: "Tercer puesto", icon: "🥉", match: "startsWith" },
   { href: "/predicciones/final", label: "Final", icon: "🏆", match: "startsWith" },
 ];
 
