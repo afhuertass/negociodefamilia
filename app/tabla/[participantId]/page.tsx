@@ -211,7 +211,7 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
         </div>
       </section>
 
-      {roundOrder.filter((round) => round !== Round.GROUP_STAGE).map((round) => {
+      {roundOrder.filter((round) => round !== Round.GROUP_STAGE && round !== Round.THIRD_PLACE && round !== Round.FINAL).map((round) => {
         const predictions = participant.matchPredictions.filter((p) => p.match.round === round);
         return (
           <section key={round} className="card overflow-x-auto">
