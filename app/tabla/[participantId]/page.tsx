@@ -213,14 +213,14 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
 
       {roundOrder.filter((round) => {
         if (round === Round.GROUP_STAGE) return false;
-        if (round === Round.FINAL || round === Round.THIRD_PLACE) {
+        if (round === Round.FINAL) {
           const matchPred = participant.matchPredictions.find((p) => p.match.round === round);
           return matchPred?.match.result != null;
         }
         return true;
       }).map((round) => {
         const predictions = participant.matchPredictions.filter((p) => p.match.round === round);
-        const isAnonymousRound = round === Round.FINAL || round === Round.THIRD_PLACE;
+        const isAnonymousRound = round === Round.FINAL;
         return (
           <section key={round} className="card overflow-x-auto">
             <h2 className="text-2xl font-black">{phaseLabels[round]}</h2>
