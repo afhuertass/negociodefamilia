@@ -69,5 +69,6 @@ export const phaseLabels: Record<Round, string> = {
   ROUND_OF_16: "Octavos",
   QUARTER_FINALS: "Cuartos",
   SEMI_FINALS: "Semifinales",
+  THIRD_PLACE: "Tercer puesto",
   FINAL: "Final",
 };

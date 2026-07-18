@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "tsc -p tsconfig.build.json && next build",
+    "build": "npx prisma generate && tsc -p tsconfig.build.json && next build",
     "start": "next start",
     "lint": "eslint",
     "seed": "node prisma/seed.js",

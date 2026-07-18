@@ -90,10 +90,11 @@ const roundName: Record<Round, string> = {
   ROUND_OF_16: "Octavos",
   QUARTER_FINALS: "Cuartos",
   SEMI_FINALS: "Semifinales",
+  THIRD_PLACE: "Tercer puesto",
   FINAL: "Final",
 };
 
-const knockoutRounds = [Round.ROUND_OF_32, Round.ROUND_OF_16, Round.QUARTER_FINALS, Round.SEMI_FINALS, Round.FINAL];
+const knockoutRounds = [Round.ROUND_OF_32, Round.ROUND_OF_16, Round.QUARTER_FINALS, Round.SEMI_FINALS, Round.THIRD_PLACE, Round.FINAL];
 
 export default async function AdminMatchesPage({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   if (!(await isAdmin())) redirect("/admin");

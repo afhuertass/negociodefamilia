@@ -10,6 +10,7 @@ const rounds: Record<string, Round> = {
   octavos: Round.ROUND_OF_16,
   cuartos: Round.QUARTER_FINALS,
   semifinales: Round.SEMI_FINALS,
+  tercerpuesto: Round.THIRD_PLACE,
   final: Round.FINAL,
 };
 
@@ -18,6 +19,7 @@ const roundTitles: Record<string, string> = {
   octavos: "Octavos",
   cuartos: "Cuartos",
   semifinales: "Semifinales",
+  tercerpuesto: "Tercer puesto",
   final: "Final",
 };
 

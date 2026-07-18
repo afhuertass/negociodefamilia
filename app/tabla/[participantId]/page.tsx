@@ -14,6 +14,7 @@ const roundOrder = [
   Round.ROUND_OF_16,
   Round.QUARTER_FINALS,
   Round.SEMI_FINALS,
+  Round.THIRD_PLACE,
   Round.FINAL,
 ];
 
