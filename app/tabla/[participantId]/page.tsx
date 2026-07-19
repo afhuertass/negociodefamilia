@@ -211,16 +211,8 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
         </div>
       </section>
 
-      {roundOrder.filter((round) => {
-        if (round === Round.GROUP_STAGE) return false;
-        if (round === Round.FINAL) {
-          const matchPred = participant.matchPredictions.find((p) => p.match.round === round);
-          return matchPred?.match.result != null;
-        }
-        return true;
-      }).map((round) => {
+      {roundOrder.filter((round) => round !== Round.GROUP_STAGE).map((round) => {
         const predictions = participant.matchPredictions.filter((p) => p.match.round === round);
-        const isAnonymousRound = round === Round.FINAL;
         return (
           <section key={round} className="card overflow-x-auto">
             <h2 className="text-2xl font-black">{phaseLabels[round]}</h2>
@@ -233,7 +225,7 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
                     <th className="p-3">Clasifica</th>
                     <th className="p-3">Resultado real</th>
                     <th className="p-3 text-right">Puntos</th>
-                    {!isAnonymousRound && <th className="p-3 w-10"></th>}
+                    <th className="p-3 w-10"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -251,25 +243,6 @@ export default async function ParticipantPredictionsPage({ params }: { params: P
                           actualQualifiedTeamId: result.qualifiedTeamId,
                         }).points
                       : null;
-                    if (isAnonymousRound) {
-                      const home = match.homeTeam?.name || match.homeSlot || "Por definir";
-                      const away = match.awayTeam?.name || match.awaySlot || "Por definir";
-                      return (
-                        <tr key={prediction.id} className="border-b last:border-0">
-                          <td className="p-3 font-semibold">#{match.matchNumber ?? ""} · {home} vs {away}</td>
-                          <td className="p-3 font-black">{prediction.homeGoals} - {prediction.awayGoals}</td>
-                          <td className="p-3">{prediction.qualifiedTeam.name}</td>
-                          <td className="p-3 text-slate-600">
-                            {result
-                              ? `${result.homeGoals} - ${result.awayGoals}, clasifica ${result.qualifiedTeam.name}`
-                              : "Pendiente"}
-                          </td>
-                          <td className="p-3 text-right font-black text-emerald-700">
-                            {awarded === null ? "—" : awarded}
-                          </td>
-                        </tr>
-                      );
-                    }
 
                     const homeId = match.homeTeamId;
                     const awayId = match.awayTeamId;
